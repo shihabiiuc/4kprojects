@@ -1,0 +1,175 @@
+---
+// src/components/HomeReel.astro
+interface Props {
+  sources: { src: string; type: string }[];
+  poster?: string;
+  label: string;
+}
+
+const { sources, poster, label } = Astro.props;
+---
+
+<!-- Full-screen showreel. While it scrolls in, the frame springs up from half
+     size, and its rounded corners square off once it reaches the middle of the
+     screen. The video only loads when it is about to be seen. -->
+<section class="reel">
+  <div class="reel__scaler" data-reel>
+    <div class="reel__frame" data-scroll-trigger data-trigger="reel-corners">
+      {sources.length ? (
+        <video
+          style={poster && `background-image: url(${poster})`}
+          loop
+          muted
+          playsinline
+          preload="none"
+          disablepictureinpicture
+          aria-label={label}
+          data-lazy-video
+        >
+          {sources.map((s) => <source data-src={s.src} type={s.type} />)}
+        </video>
+      ) : (
+        <div class="media-placeholder">{label}</div>
+      )}
+    </div>
+  </div>
+  <div class="reel__scale-trigger" data-reel-trigger aria-hidden="true"></div>
+  <div id="reel-corners" class="reel__corner-trigger" aria-hidden="true"></div>
+</section>
+
+<script>
+  // Spring settings from the live site: stiffness 500, damping 60.
+  const STIFFNESS = 500;
+  const DAMPING = 60;
+
+  function initReelScale() {
+    const reel = document.querySelector<HTMLElement>('[data-reel]');
+    const trigger = document.querySelector<HTMLElement>('[data-reel-trigger]');
+    if (!reel || !trigger || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // 0 → 1 as the trigger band scrolls past the middle of the screen.
+    const target = () => {
+      const start = trigger.getBoundingClientRect().top + scrollY - 1 - 0.5 * innerHeight;
+      return Math.min(Math.max((scrollY - start) / trigger.offsetHeight, 0), 1);
+    };
+
+    let value = target();
+    let velocity = 0;
+    let last = 0;
+    let running = false;
+
+    const render = () => {
+      reel.style.scale = String(0.5 + 0.5 * value);
+      reel.style.translate = `0 ${-150 * (1 - value)}px`;
+    };
+
+    const step = (now: number) => {
+      let dt = Math.min((now - last) / 1000, 0.1);
+      last = now;
+      const goal = target();
+      // Integrate in small fixed steps so the spring stays stable.
+      while (dt > 0) {
+        const h = Math.min(dt, 1 / 240);
+        velocity += (STIFFNESS * (goal - value) - DAMPING * velocity) * h;
+        value += velocity * h;
+        dt -= h;
+      }
+      if (Math.abs(goal - value) < 5e-4 && Math.abs(velocity) < 1e-3) {
+        value = goal;
+        velocity = 0;
+        running = false;
+      }
+      render();
+      if (running) requestAnimationFrame(step);
+    };
+
+    const start = () => {
+      if (running) return;
+      running = true;
+      last = performance.now();
+      requestAnimationFrame(step);
+    };
+
+    render();
+    window.addEventListener('scroll', start, { passive: true });
+    window.addEventListener('resize', start);
+  }
+
+  // Load the video's sources only once it nears the viewport; pause it off screen.
+  function initLazyVideos() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll<HTMLVideoElement>('video[data-lazy-video]').forEach((video) => {
+      let loaded = false;
+      new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return video.pause();
+        if (!loaded) {
+          loaded = true;
+          video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((s) => {
+            s.src = s.dataset.src!;
+            s.removeAttribute('data-src');
+          });
+          video.load();
+        }
+        video.play().catch(() => {});
+      }).observe(video);
+    });
+  }
+
+  initReelScale();
+  if (document.readyState === 'complete') initLazyVideos();
+  else window.addEventListener('load', initLazyVideos, { once: true });
+</script>
+
+<style>
+  .reel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .reel__scaler {
+    flex: none;
+    width: 100%;
+    height: 100vh;
+    will-change: transform;
+  }
+
+  .reel__frame {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 50px;
+    transition: border-radius 600ms var(--ease-nav);
+  }
+  .reel__frame[data-active] { border-radius: 0; }
+
+  .reel__frame video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Invisible scroll markers, placed where the live site places them. */
+  .reel__scale-trigger,
+  .reel__corner-trigger {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .reel__scale-trigger { top: -183px; height: 583px; }
+  .reel__corner-trigger { top: calc(45.625% - 34.5px); height: 69px; }
+  @media (min-width: 810px) {
+    .reel__scale-trigger,
+    .reel__corner-trigger { width: 720px; }
+  }
+</style>

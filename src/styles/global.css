@@ -7,16 +7,9 @@
 @font-face {
   font-family: "DM Sans";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100 1000;
   font-display: block;
-  src: url("/fonts/dm-sans-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: block;
-  src: url("/fonts/dm-sans-500.woff2") format("woff2");
+  src: url("/fonts/dm-sans-variable.woff2") format("woff2");
 }
 @font-face {
   font-family: "Source Serif 4";
@@ -30,7 +23,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("/fonts/source-serif-4.woff2") format("woff2");
+  src: url("/fonts/source-serif-4-regular.woff2") format("woff2");
 }
 /* ADDED: Framer emits a "Placeholder" family in computed font-family strings.
    It never renders (no @font-face for it), but the computed `fontFamily`
@@ -42,21 +35,14 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("/fonts/source-serif-4.woff2") format("woff2");
+  src: url("/fonts/source-serif-4-regular.woff2") format("woff2");
 }
 @font-face {
   font-family: "DM Sans Placeholder";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100 1000;
   font-display: block;
-  src: url("/fonts/dm-sans-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "DM Sans Placeholder";
-  font-style: normal;
-  font-weight: 500;
-  font-display: block;
-  src: url("/fonts/dm-sans-500.woff2") format("woff2");
+  src: url("/fonts/dm-sans-variable.woff2") format("woff2");
 }
 @font-face {
   font-family: "Mona Sans";
@@ -562,70 +548,94 @@
   margin: 0;
 }
 
-/* Footer. */
-.site-footer {
-  position: relative; 
-  z-index: 3;
-  background-color: var(--bg-dark);
-  color: var(--text-on-dark);
-  padding: var(--footer-pt) var(--footer-px) var(--footer-pb);
+/* ==========================================================================
+   HOME PAGE TOKENS
+   ========================================================================== */
+
+:root {
+  --color-beige: #eadfd1;
+  --color-ink-warm: #1f1d1b;
+  --color-marker: #ffe403;
+  --color-shade: #191919;
+  --color-sand: #dbdcd0;
+  --color-mist: #dad8d9;
+  --color-ink-soft: #222;
+  --color-muted-dark: #00000080;
+  --gutter: 20px;
+
+  --ease-reveal: cubic-bezier(.44, 0, .05, 1);
+  --ease-nav: cubic-bezier(.45, 0, .05, 1);
+  --ease-slide: cubic-bezier(.44, 0, .56, 1);
+  --ease-rise: cubic-bezier(.24, .2, 0, .99);
+  --ease-link: linear(0, .01 10%, .07 20%, .24 30%, .54 40%, .73 50%, .83 60%, .9 70%, .94 80%, .97 90%, 1);
+  --ease-card: cubic-bezier(.5, 0, .88, .77);
+  --ease-faq: linear(0, .09 5%, .264 10%, .442 15%, .594 20%, .713 25%, .801 30%, .864 35%, .908 40%, .939 45%, .96 50%, .973 55%, .983 60%, .989 65%, .993 70%, .995 75%, .997 80%, .998 85%, .999 90%, 1);
+  --ease-spring: linear(0, .02 4%, .18 10%, .41 17%, .63 23%, .8 30%, .93 36%, 1 43%, 1.034 49%, 1.046 56%, 1.044 62%, 1.034 69%, 1.02 75%, 1.01 81%, 1.007 88%, 1.002 94%, 1);
+  --ease-bio: linear(0, .074 5%, .234 10%, .415 15%, .584 20%, .723 25%, .83 30%, .906 35%, .957 40%, .988 45%, 1.005 50%, 1.013 55%, 1.015 60%, 1.012 70%, 1.007 80%, 1.003 90%, 1);
+  --ease-marker: linear(0, .079 5%, .236 10%, .403 15%, .551 20%, .671 25%, .764 30%, .833 35%, .883 40%, .919 45%, .944 50%, .962 55%, .974 60%, .983 65%, .988 70%, .992 75%, .995 80%, .997 85%, .998 90%, .998 95%, 1);
+}
+@media (min-width: 810px) {
+  :root { --gutter: 30px; }
+}
+
+/* Page colour: <body data-page="sand|beige|mist"> sets the background
+   (--color-page), which the footer text and some page copy also use. */
+body { --color-page: var(--color-sand); --footer: var(--color-page); background-color: var(--color-page); }
+body[data-page="beige"] { --color-page: var(--color-beige); }
+body[data-page="mist"] { --color-page: var(--color-mist); }
+
+/* Smooth scrolling (Lenis) — native smooth scroll would fight it. */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Text reveals — see src/scripts/motion.ts. Words slide up 30px with a
+   50ms stagger, starting after --reveal-start. Without JS nothing is hidden. */
+[data-reveal="word"] > span,
+[data-reveal="line"] > span > span { display: inline-block; }
+.js [data-reveal="word"] > span,
+.js [data-reveal="line"] > span > span {
+  opacity: 0.001;
+  translate: 0 30px;
+  transition: opacity 1s var(--ease-reveal), translate 1s var(--ease-reveal);
+  transition-delay: calc(var(--reveal-start, 0s) + var(--i, 0) * 50ms);
+}
+.js [data-reveal][data-revealed] > span,
+.js [data-reveal="line"][data-revealed] > span > span {
+  opacity: 1;
+  translate: none;
+}
+
+/* Scroll triggers: elements wait in their "inactive" state until
+   motion.ts adds [data-active]. Each component sets its own transition. */
+.js [data-scroll-trigger].trigger-fade:not([data-active]) { opacity: 0; }
+.js [data-scroll-trigger].trigger-rise:not([data-active]) { opacity: 0; translate: 0 var(--rise, 40px); }
+
+/* Panels rise into view when shown (also replays when a tab is switched). */
+@keyframes rise-in {
+  0% { opacity: 0.001; translate: 0 130px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] span,
+  .js [data-scroll-trigger] {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+}
+
+/* Empty media slot — swap for a real <img>/<video> by filling the JSON. */
+.media-placeholder {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
-  gap: 0px;
-  overflow: hidden;
-}
-
-/* Footer copy at 16px — differs from the 14px "small-copy". */
-.footer-copy {
-  font-family: "DM Sans", "DM Sans Placeholder", sans-serif;
-  font-size: 16px;
-  line-height: 19.2px;
-  font-weight: 400;
-  white-space: pre-wrap;
-  color: var(--text-on-dark-muted);
-  margin: 0;
-}
-
-/* Footer addresses use `pre` and 14px. */
-.footer-address {
-  font-family: "DM Sans", "DM Sans Placeholder", sans-serif;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #cfc4b6, #a89d90);
+  color: rgba(0, 0, 0, 0.45);
+  font-family: "DM Sans", sans-serif;
   font-size: 14px;
-  line-height: 16.8px;
-  font-weight: 400;
-  white-space: pre;
-  color: var(--text-on-dark-muted);
-  margin: 0;
-}
-
-/* Footer section label (Head office, Hiring, Contact). */
-.footer-label {
-  font-family: "Source Serif 4 Regular", "Source Serif 4 Regular Placeholder", serif;
-  font-size: 18px;
-  line-height: 21.6px;
-  font-weight: 400;
-  white-space: pre;
-  color: var(--text-on-dark);
-  margin: 0;
-}
-
-/* Footer link with underline (the "here" link). */
-.footer-link {
-  font-family: "Source Serif 4 Regular", "Source Serif 4 Regular Placeholder", serif;
-  font-size: 24px;
-  line-height: 24px;
-  font-weight: 400;
-  text-decoration: underline;
-  color: var(--text-on-dark);
-}
-
-/* The giant "4K Projects" wordmark in the footer. */
-.footer-wordmark {
-  font-family: "Source Serif 4 Regular", "Source Serif 4 Regular Placeholder", serif;
-  font-size: 214.941px;
-  line-height: 257.929px;
-  font-weight: 400;
-  white-space: pre;
-  color: var(--text-on-dark);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }

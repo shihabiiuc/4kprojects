@@ -4,11 +4,14 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  /** Page colour: sets the background and footer text colour. */
+  page?: 'sand' | 'beige' | 'mist';
 }
 
 const { 
   title = "About - 4K - CGIs by designers, for designers",
-  description = "Discover how firsthand experience inspired a fresh approach to workplace CGI outsourcing."
+  description = "Discover how firsthand experience inspired a fresh approach to workplace CGI outsourcing.",
+  page = 'sand',
 } = Astro.props;
 ---
 
@@ -20,8 +23,12 @@ const {
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
-  <body>
+  <body data-page={page}>
     <slot />
+    <script>
+      import '../scripts/motion.ts';
+    </script>
   </body>
 </html>

@@ -1,0 +1,156 @@
+---
+// src/components/ClientTicker.astro
+interface Props {
+  logos: { image: string; alt: string }[];
+}
+
+const { logos } = Astro.props;
+
+// Four rows of up to eight logos, alternating direction, as on the live site.
+const PER_ROW = 8;
+const rows: Props['logos'][] = [];
+for (let i = 0; i < logos.length; i += PER_ROW) rows.push(logos.slice(i, i + PER_ROW));
+---
+
+<section class="ticker">
+  <div class="ticker__rows" role="group" aria-label="Clients">
+    {rows.map((row, r) => (
+      <div class="ticker__row" data-ticker={r % 2 ? 'right' : 'left'}>
+        <ul class="ticker__track" data-ticker-track>
+          {row.map((logo) => (
+            <li class="ticker__item">
+              {logo.image ? (
+                <img src={logo.image} alt={logo.alt} loading="lazy" decoding="async" />
+              ) : (
+                <div class="media-placeholder">{logo.alt}</div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Each row scrolls at 40px/s. The track is cloned enough times to cover the
+  // row twice, then animated by exactly one copy's width so the loop is seamless.
+  const SPEED = 40;
+
+  function initTicker(row: HTMLElement) {
+    const track = row.querySelector<HTMLElement>('[data-ticker-track]');
+    if (!track) return;
+    const items = [...track.children] as HTMLElement[];
+    if (!items.length) return;
+
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    const first = items[0];
+    const last = items[items.length - 1];
+    const setWidth = last.offsetLeft + last.offsetWidth - first.offsetLeft + gap;
+    const rowWidth = row.offsetWidth;
+    if (!setWidth || !rowWidth) return;
+
+    const copies = Math.min(Math.round((rowWidth / setWidth) * 2) + 1, 100);
+    for (let c = 0; c < copies; c++) {
+      for (const item of items) {
+        const clone = item.cloneNode(true) as HTMLElement;
+        clone.setAttribute('aria-hidden', 'true');
+        track.append(clone);
+      }
+    }
+
+    const distance = setWidth + setWidth * Math.round(rowWidth / setWidth);
+    const keyframes =
+      row.dataset.ticker === 'right'
+        ? { transform: [`translateX(${-distance}px)`, 'translateX(0px)'] }
+        : { transform: ['translateX(0px)', `translateX(${-distance}px)`] };
+    const anim = track.animate(keyframes, {
+      duration: (distance / SPEED) * 1000,
+      iterations: Infinity,
+      easing: 'linear',
+    });
+
+    track.addEventListener('mouseenter', () => anim.updatePlaybackRate(0.5));
+    track.addEventListener('mouseleave', () => anim.updatePlaybackRate(1));
+    new IntersectionObserver(([entry]) => (entry.isIntersecting ? anim.play() : anim.pause())).observe(row);
+  }
+
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLElement>('[data-ticker]').forEach(initTicker);
+  }
+</script>
+
+<style>
+  .ticker {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0 30px 40px;
+    background: var(--color-beige);
+  }
+  @media (min-width: 810px) {
+    .ticker { padding-bottom: 60px; }
+  }
+  @media (min-width: 1200px) {
+    .ticker { padding-bottom: 100px; }
+  }
+
+  .ticker__rows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    overflow: clip;
+  }
+
+  .ticker__row {
+    display: flex;
+    flex: none;
+    width: 100%;
+    height: 102px;
+    padding: 10px;
+  }
+  @media (min-width: 810px) {
+    .ticker__row { height: 108px; }
+  }
+  @media (min-width: 1200px) {
+    .ticker__row { width: 1140px; height: 74px; }
+  }
+
+  .ticker__track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    will-change: transform;
+  }
+  @media (min-width: 810px) {
+    .ticker__track { gap: 85px; }
+  }
+
+  .ticker__item {
+    flex: none;
+    width: 140px;
+    height: 53px;
+  }
+  .ticker__item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .ticker__item .media-placeholder { border-radius: 8px; font-size: 12px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__row { height: auto; }
+    .ticker__track { flex-wrap: wrap; justify-content: center; row-gap: 20px; }
+  }
+</style>

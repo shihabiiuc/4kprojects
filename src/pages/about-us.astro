@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+import AboutHero from '../components/AboutHero.astro';
+import WorkSlider from '../components/WorkSlider.astro';
+import OurStory from '../components/OurStory.astro';
+import TeamSection from '../components/TeamSection.astro';
+import AboutStat from '../components/AboutStat.astro';
+import FAQSection from '../components/FAQSection.astro';
+import Footer from '../components/Footer.astro';
+
+import content from '../data/about.json';
+---
+
+<Layout title={content.meta.title} description={content.meta.description}>
+  <Header />
+  <main>
+    <!-- 1. STICKY INTRO -->
+    <AboutHero title={content.hero.title} lead={content.hero.lead} />
+
+    <!-- 2. FULL-SCREEN WORK SLIDER (scrolls over the intro) -->
+    <WorkSlider slides={content.slides} />
+
+    <!-- 3. OUR STORY (black) -->
+    <OurStory title={content.story.title} paragraphs={content.story.paragraphs} />
+
+    <!-- 4. THE 4K TEAM -->
+    <TeamSection
+      title={content.team.title}
+      subtitle={content.team.subtitle}
+      members={content.team.members}
+    />
+
+    <!-- 5. ARTISTS STAT -->
+    <AboutStat
+      count={content.stat.count}
+      suffix={content.stat.suffix}
+      label={content.stat.label}
+      text={content.stat.text}
+    />
+
+    <!-- 6. FAQ -->
+    <FAQSection title={content.faq.title} items={content.faq.items} />
+  </main>
+  <Footer />
+</Layout>

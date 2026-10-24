@@ -1,0 +1,60 @@
+---
+// src/components/HomeGallery.astro
+interface Props {
+  images: { image: string; alt: string }[];
+}
+
+const { images } = Astro.props;
+---
+
+<!-- Full-screen images that stick and stack on top of each other while scrolling. -->
+<section class="gallery">
+  {images.map((item) => (
+    <div class="gallery__panel">
+      {item.image ? (
+        <img src={item.image} alt={item.alt} loading="lazy" />
+      ) : (
+        <div class="media-placeholder">{item.alt}</div>
+      )}
+      <div class="gallery__shade"></div>
+    </div>
+  ))}
+</section>
+
+<style>
+  .gallery {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--color-beige);
+  }
+  @media (min-width: 810px) {
+    .gallery { padding-top: 60px; }
+  }
+  @media (min-width: 1200px) {
+    .gallery { padding-top: 80px; }
+  }
+
+  .gallery__panel {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .gallery__panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery__shade {
+    position: absolute;
+    inset: 0;
+    background: var(--color-shade);
+    opacity: 0.2;
+    pointer-events: none;
+  }
+</style>

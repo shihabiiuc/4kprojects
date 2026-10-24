@@ -1,0 +1,67 @@
+---
+// src/components/UnderlineLink.astro
+// Link with the live site's animated underline: on hover the line slides out
+// to the right while a new one slides in from the left, and the label turns
+// medium weight.
+interface Props {
+  href: string;
+  label: string;
+  /** Grow from 16px to 20px from the tablet breakpoint up (footer CTA). */
+  large?: boolean;
+  newTab?: boolean;
+}
+
+const { href, label, large = false, newTab = false } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['underline-link', large && 'underline-link--large']}
+  target={newTab ? '_blank' : undefined}
+  rel={newTab ? 'noopener' : undefined}
+>
+  <span class="underline-link__out"></span>
+  <span class="underline-link__in"></span>
+  <span class="underline-link__label">{label}</span>
+</a>
+
+<style>
+  .underline-link {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    width: min-content;
+    padding-bottom: 5px;
+    overflow: hidden;
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px;
+    line-height: 17.6px;
+    white-space: pre;
+    cursor: pointer;
+  }
+  @media (min-width: 810px) {
+    .underline-link--large { font-size: 20px; line-height: 22px; }
+  }
+
+  .underline-link__out,
+  .underline-link__in {
+    position: absolute;
+    z-index: 1;
+    height: 1px;
+    background: currentColor;
+    transition: left 600ms var(--ease-nav), bottom 600ms var(--ease-nav), width 600ms var(--ease-nav);
+  }
+  .underline-link__out { bottom: 1px; left: 0; width: 100%; }
+  .underline-link__in { bottom: 0; left: -5px; width: 0; }
+  .underline-link__label { transition: font-weight 550ms var(--ease-link); }
+
+  @media (hover: hover) {
+    .underline-link:hover .underline-link__out { bottom: 0; left: calc(100% + 5px); width: 0; }
+    .underline-link:hover .underline-link__in { left: 0; width: 100%; }
+    .underline-link:hover .underline-link__label { font-weight: 500; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .underline-link__label { transition: none; }
+  }
+</style>

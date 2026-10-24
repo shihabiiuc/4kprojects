@@ -1,0 +1,205 @@
+---
+// src/components/MasonryGallery.astro
+// Masonry grid of images that open in a lightbox. Each item carries its
+// position for 3 columns (lg), 2 columns (md) and 1 column (sm) as
+// [column, height above it in column widths, items above it]; these are the
+// live site's own positions, turned into CSS here.
+export interface MasonryItem {
+  name: string;
+  alt: string;
+  w: number;
+  h: number;
+  thumbW: number;
+  lg: [number, number, number];
+  md: [number, number, number];
+  sm: [number, number, number];
+}
+
+interface Props {
+  id: string;
+  labelledBy: string;
+  items: MasonryItem[];
+  hidden?: boolean;
+}
+
+const { id, labelledBy, items, hidden = false } = Astro.props;
+
+const layouts = {
+  lg: { cols: 3, gap: 10, totalGap: 20 },
+  md: { cols: 2, gap: 20, totalGap: 20 },
+  sm: { cols: 1, gap: 20, totalGap: 0 },
+} as const;
+type Key = keyof typeof layouts;
+const keys = Object.keys(layouts) as Key[];
+
+const colW = (k: Key) => `((100cqw - ${layouts[k].totalGap}px) / ${layouts[k].cols})`;
+const colWidth = (k: Key) => `calc${colW(k)}`;
+
+function itemVars(item: MasonryItem) {
+  return keys
+    .map((k) => {
+      const [col, above, count] = item[k];
+      const { gap } = layouts[k];
+      return [
+        `--${k}-x: calc(${col} * (${colW(k)} + ${gap}px))`,
+        `--${k}-y: calc(${above} * ${colW(k)} + ${count * gap}px)`,
+        `--${k}-w: ${colWidth(k)}`,
+      ].join('; ');
+    })
+    .join('; ');
+}
+
+// Box height per layout: the tallest column.
+function heightVars() {
+  return keys
+    .map((k) => {
+      const { cols, gap } = layouts[k];
+      const columns = Array.from({ length: cols }, () => ({ ratio: 0, count: 0 }));
+      for (const item of items) {
+        const c = columns[item[k][0]];
+        c.ratio = Math.max(c.ratio, item[k][1] + item.h / item.w);
+        c.count = Math.max(c.count, item[k][2] + 1);
+      }
+      const parts = columns
+        .filter((c) => c.count)
+        .map((c) => `calc(${c.ratio} * ${colW(k)} + ${(c.count - 1) * gap}px)`);
+      return `--${k}-h: max(${parts.join(', ')})`;
+    })
+    .join('; ');
+}
+
+const sizes = '(min-width: 1200px) calc((100vw - 84px) / 3), (min-width: 810px) calc((100vw - 84px) / 2), calc(100vw - 48px)';
+const thumb = (item: MasonryItem) => `/images/visualisation/thumbs/${item.name}.webp`;
+const full = (item: MasonryItem) => `/images/visualisation/full/${item.name}.webp`;
+---
+
+<div id={id} class="masonry-gallery" role="tabpanel" aria-labelledby={labelledBy} hidden={hidden} data-gallery>
+  <div class="masonry-box">
+    <div class="masonry" style={heightVars()}>
+      {items.map((item) => (
+        <a
+          class="masonry-item"
+          style={`aspect-ratio: ${item.w} / ${item.h}; ${itemVars(item)}`}
+          href={full(item)}
+          data-lightbox
+          data-srcset={`${thumb(item)} ${item.thumbW}w, ${full(item)} ${item.w}w`}
+          data-sizes={`min(100vw, ${Math.round((item.w / item.h) * 10000) / 100}vh)`}
+        >
+          <img
+            src={thumb(item)}
+            srcset={`${thumb(item)} ${item.thumbW}w, ${full(item)} ${item.w}w`}
+            sizes={sizes}
+            alt={item.alt}
+            width={item.w}
+            height={item.h}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  // GLightbox (same options as the live site) is only loaded once a gallery
+  // gets within 400px of the screen.
+  type Lightbox = { setElements(els: object[]): void; openAt(i: number): void };
+  const icon = (body: string) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/>${body}</svg>`;
+  const stroke = 'fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"';
+  const svg = {
+    prev: icon(`<polyline points="160 208 80 128 160 48" ${stroke}/>`),
+    next: icon(`<polyline points="96 48 176 128 96 208" ${stroke}/>`),
+    close: icon(`<line x1="200" y1="56" x2="56" y2="200" ${stroke}/><line x1="200" y1="200" x2="56" y2="56" ${stroke}/>`),
+  };
+
+  let lightbox: Promise<Lightbox> | undefined;
+  const loadLightbox = () =>
+    (lightbox ??= Promise.all([
+      import('glightbox'),
+      import('glightbox/dist/css/glightbox.min.css'),
+    ]).then(([{ default: GLightbox }]) =>
+      GLightbox({
+        loop: true,
+        draggable: true,
+        zoomable: true,
+        closeOnOutsideClick: true,
+        closeButton: true,
+        openEffect: 'zoom',
+        closeEffect: 'zoom',
+        slideEffect: 'slide',
+        preload: true,
+        svg,
+      }) as Lightbox
+    ));
+
+  const nearby = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      nearby.disconnect();
+      loadLightbox();
+    },
+    { rootMargin: '400px 0px' }
+  );
+  document.querySelectorAll('[data-gallery]').forEach((g) => nearby.observe(g));
+
+  document.addEventListener('click', async (e) => {
+    const link = (e.target as Element).closest<HTMLAnchorElement>('a[data-lightbox]');
+    if (!link || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    const gallery = link.closest('[data-gallery]');
+    if (!gallery) return;
+    e.preventDefault();
+    const links = [...gallery.querySelectorAll<HTMLAnchorElement>('a[data-lightbox]')].filter((a) => a.offsetParent);
+    const box = await loadLightbox();
+    box.setElements(
+      links.map((a) => ({ href: a.href, type: 'image', srcset: a.dataset.srcset ?? '', sizes: a.dataset.sizes ?? '' }))
+    );
+    box.openAt(links.indexOf(link));
+  });
+</script>
+
+<style>
+  .masonry-gallery {
+    width: 100%;
+    padding: 24px;
+    animation: rise-in 0.75s var(--ease-slide) 0.5s both;
+  }
+  @media (min-width: 810px) {
+    .masonry-gallery { padding: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .masonry-gallery { animation: none; }
+  }
+
+  .masonry-box { container-type: inline-size; }
+
+  .masonry {
+    position: relative;
+    height: var(--sm-h);
+  }
+  .masonry-item {
+    position: absolute;
+    top: var(--sm-y);
+    left: var(--sm-x);
+    display: block;
+    width: var(--sm-w);
+    overflow: hidden;
+    border-radius: 20px;
+  }
+  @media (min-width: 810px) {
+    .masonry { height: var(--md-h); }
+    .masonry-item { top: var(--md-y); left: var(--md-x); width: var(--md-w); }
+  }
+  @media (min-width: 1200px) {
+    .masonry { height: var(--lg-h); }
+    .masonry-item { top: var(--lg-y); left: var(--lg-x); width: var(--lg-w); }
+  }
+
+  .masonry-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

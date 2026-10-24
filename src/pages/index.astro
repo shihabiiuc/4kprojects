@@ -2,45 +2,64 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 
-import AboutHero from '../components/AboutHero.astro';
-import WorkSlider from '../components/WorkSlider.astro';
-import OurStory from '../components/OurStory.astro';
-import TeamSection from '../components/TeamSection.astro';
-import FAQSection from '../components/FAQSection.astro';
+import HomeHero from '../components/HomeHero.astro';
+import HomeOverview from '../components/HomeOverview.astro';
+import HomeReel from '../components/HomeReel.astro';
+import StatLines from '../components/StatLines.astro';
+import HomeServices from '../components/HomeServices.astro';
+import HomeGallery from '../components/HomeGallery.astro';
+import ClientTicker from '../components/ClientTicker.astro';
+import HomeReviews from '../components/HomeReviews.astro';
 import Footer from '../components/Footer.astro';
 
-import content from '../data/about.json';
+import content from '../data/home.json';
 ---
 
-<Layout title="About Us | 4K Projects">
+<Layout title={content.meta.title} description={content.meta.description} page="beige">
   <Header />
   <main>
     <!-- 1. STICKY HERO (z-index: 1) -->
-    <AboutHero 
-      title={content.hero.title} 
-      subtitle={content.hero.lead} 
+    <HomeHero
+      intro={content.hero.intro}
+      wordmark={content.hero.wordmark}
+      left={content.hero.left}
+      right={content.hero.right}
     />
 
-    <!-- 2. WORK SLIDER (900px, z-index: 9, scrolls over the hero) -->
-    <WorkSlider 
-      slides={content.hero.slides} 
+    <!-- 2. OVERVIEW (black card, scrolls over the hero) -->
+    <HomeOverview
+      title={content.overview.title}
+      body={content.overview.body}
+      cta={content.overview.cta}
     />
 
-    <!-- 3. OUR STORY SECTION (Solid Black) -->
-    <OurStory 
-      title={content.story.title} 
-      paragraphs={content.story.paragraphs} 
+    <!-- 3. SHOWREEL (full screen) -->
+    <HomeReel
+      sources={content.reel.sources}
+      poster={content.reel.poster}
+      label={content.reel.label}
     />
 
-    <!-- 4. THE 4K TEAM -->
-    <TeamSection 
-      data={content.team} 
+    <!-- 4. STAT LINES -->
+    <StatLines lines={content.statsTop} />
+
+    <!-- 5. SERVICES GRID -->
+    <HomeServices
+      title={content.services.title}
+      items={content.services.items}
     />
 
-    <!-- 5. FAQ SECTION -->
-    <FAQSection 
-      questions={content.faq} 
-    />
+    <!-- 6. STACKING FULL-WIDTH IMAGES -->
+    <HomeGallery images={content.gallery} />
+
+    <!-- 7. STAT LINES -->
+    <StatLines lines={content.statsBottom} />
+
+    <!-- 8. CLIENT LOGO TICKER -->
+    <ClientTicker logos={content.clients.logos} />
+
+    <!-- 9. REVIEWS (Wally widget) -->
+    <HomeReviews widgetId={content.reviews.widgetId} />
   </main>
   <Footer />
 </Layout>

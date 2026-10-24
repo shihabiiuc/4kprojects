@@ -1,0 +1,55 @@
+---
+// src/components/StatLines.astro
+interface Props {
+  lines: string[];
+}
+
+const { lines } = Astro.props;
+---
+
+<!-- Three large underlined statements, centred. Used twice on the home page.
+     Each line fades in once it passes the middle of the screen, and fades
+     out again when scrolled back below it. -->
+<section class="stat-lines" data-nav-lines="ink">
+  {lines.map((line) => (
+    <p class="stat-lines__item trigger-fade" data-scroll-trigger>{line}</p>
+  ))}
+</section>
+
+<style>
+  .stat-lines {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px var(--gutter);
+    background: var(--color-beige);
+    color: #000;
+    text-align: center;
+  }
+  @media (min-width: 810px) {
+    .stat-lines { padding-block: 100px; }
+  }
+  @media (min-width: 1200px) {
+    .stat-lines { padding-block: 150px; }
+  }
+
+  .stat-lines__item {
+    margin: 0;
+    font-family: "Source Serif 4 Regular", serif;
+    font-size: 34px;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    transition: opacity 400ms var(--ease-nav);
+  }
+  @media (min-width: 810px) {
+    .stat-lines__item { font-size: 56px; }
+  }
+  @media (min-width: 1200px) {
+    .stat-lines__item { font-size: 78px; }
+  }
+</style>

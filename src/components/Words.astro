@@ -1,0 +1,13 @@
+---
+// src/components/Words.astro
+// Renders text as one <span> per word, for [data-reveal="word"] parents.
+import { words } from '../utils/words';
+
+interface Props {
+  text: string;
+}
+
+const list = words(Astro.props.text);
+---
+
+{list.map((w, i) => <>{i > 0 && ' '}<span>{w}</span></>)}

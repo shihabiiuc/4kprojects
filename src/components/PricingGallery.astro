@@ -1,0 +1,134 @@
+---
+// src/components/PricingGallery.astro
+import Lines from './Lines.astro';
+import UnderlineLink from './UnderlineLink.astro';
+import MasonryGallery, { type MasonryItem } from './MasonryGallery.astro';
+
+interface Tab {
+  id: string;
+  description: string;
+  items: MasonryItem[];
+}
+interface Props {
+  tabs: Tab[];
+  library: { href: string; link: string; lines: string[] };
+}
+
+const { tabs, library } = Astro.props;
+---
+
+<!-- Black block that rises in after load: the selected tab's description,
+     the image-library link, and the selected tab's gallery. -->
+<section class="vis-block" data-nav-lines="white">
+  <div class="vis-block__head">
+    {tabs.map((tab, i) => (
+      <div class:list={['vis-block__desc', tab.id === 'feedback' && 'vis-block__desc--rise']} hidden={i > 0} data-tab-description={tab.id}>
+        {i === 0 ? (
+          <p data-reveal="line" data-reveal-on="view" style="--reveal-start: 0.4s"><Lines text={tab.description} /></p>
+        ) : (
+          <p>{tab.description}</p>
+        )}
+      </div>
+    ))}
+
+    <div class="vis-block__library">
+      <div class="vis-block__library-row">
+        <UnderlineLink href={library.href} label={library.link} newTab />
+        <p>{library.lines[0]}</p>
+        <p class="hide-sm">{library.lines[1]}</p>
+      </div>
+      <p class="show-sm">{library.lines[1]}</p>
+    </div>
+  </div>
+
+  {tabs.map((tab, i) => (
+    <MasonryGallery id={`panel-${tab.id}`} labelledBy={`tab-${tab.id}`} items={tab.items} hidden={i > 0} />
+  ))}
+</section>
+
+<style>
+  .vis-block {
+    --section-radius: 40px;
+    position: relative;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+    padding: 25px 0 50px;
+    border-radius: var(--section-radius) var(--section-radius) 0 0;
+    background: #000;
+    transition: opacity 1s var(--ease-bio) 600ms, translate 1s var(--ease-bio) 600ms;
+    will-change: transform;
+  }
+  :global(html.js:not([data-loaded])) .vis-block { opacity: 0.001; translate: 0 150px; }
+
+  .vis-block__head {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    overflow: hidden;
+    padding: 16px 30px;
+    color: var(--color-page);
+    font-family: "DM Sans", sans-serif;
+  }
+  @media (min-width: 810px) and (max-width: 1199px) {
+    .vis-block__head { padding-block: 12px; }
+  }
+  @media (min-width: 1200px) {
+    .vis-block__head { flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 0; }
+  }
+
+  .vis-block__desc {
+    width: 100%;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  .vis-block__desc[hidden] { display: none; }
+  .vis-block__desc p { margin: 0; }
+  @media (min-width: 810px) {
+    .vis-block__desc { font-size: 16px; line-height: 19.2px; }
+  }
+  @media (min-width: 1200px) {
+    .vis-block__desc { flex: 1; width: 1px; font-size: 18px; line-height: 21.6px; }
+    .vis-block__desc--rise { animation: rise-in 0.75s var(--ease-slide) 0.5s both; }
+  }
+  @media (min-width: 1200px) and (prefers-reduced-motion: reduce) {
+    .vis-block__desc--rise { animation: none; }
+  }
+
+  .vis-block__library {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 5px;
+    width: 100%;
+  }
+  @media (min-width: 810px) {
+    .vis-block__library { width: auto; }
+  }
+  .vis-block__library-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+  }
+  .vis-block__library p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 17.6px;
+    white-space: pre;
+  }
+  @media (max-width: 809px) {
+    .hide-sm { display: none; }
+  }
+  @media (min-width: 810px) {
+    .show-sm { display: none; }
+  }
+</style>

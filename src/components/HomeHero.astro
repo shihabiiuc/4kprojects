@@ -1,0 +1,136 @@
+---
+// src/components/HomeHero.astro
+interface IntroLine {
+  text: string;
+  highlight?: string;
+}
+interface Props {
+  intro: IntroLine[];
+  wordmark: string;
+  left: string;
+  right: string;
+}
+
+import Words from './Words.astro';
+
+const { intro, wordmark, left, right } = Astro.props;
+---
+
+<!-- Sticky beige hero — the overview card scrolls up over it, and the hero
+     fades out as the services section scrolls in (data-fade-until). -->
+<section class="home-hero" data-fade-until="services">
+  <h1 class="home-hero__intro">
+    {intro.map((line) => (
+      <span class="home-hero__line">
+        <span data-reveal="word" style="--reveal-start: 0.8s">
+          <Words text={line.text} />
+        </span>
+        {line.highlight && ' '}
+        {line.highlight && (
+          <span class="home-hero__phrase">
+            <span class="home-hero__phrase-text" data-reveal="word" style="--reveal-start: 0.8s">
+              <Words text={line.highlight} />
+            </span>
+            <svg class="home-hero__marker" viewBox="0 0 557 88" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <path d="M0 88C4 50 12 14 26 8C29 6 33 5.5 38 5.5C120 8.5 200 8 300 6L540 .5C552-.5 556 1 556 5C554 40 551 70 547 88Z" />
+            </svg>
+          </span>
+        )}
+      </span>
+    ))}
+  </h1>
+
+  <div class="home-hero__bottom">
+    <p class="home-hero__wordmark" aria-hidden="true">{wordmark}</p>
+    <div class="home-hero__meta">
+      <p data-reveal="word" data-reveal-on="view"><Words text={left} /></p>
+      <p data-reveal="word" data-reveal-on="view"><Words text={right} /></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-hero {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 50vh;
+    padding: 40px var(--gutter);
+    overflow: hidden;
+    background: var(--color-beige);
+    color: var(--color-ink-warm);
+  }
+  @media (min-width: 1200px) {
+    .home-hero { min-height: 100vh; padding: 30px; }
+  }
+
+  .home-hero__intro {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: "DM Sans", sans-serif;
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+  @media (min-width: 1200px) {
+    .home-hero__intro { font-size: 36px; }
+  }
+  .home-hero__line { display: block; overflow: hidden; }
+
+  /* Highlighted phrase: the yellow marker sweeps in from the left
+     2.3s after the page has loaded. */
+  .home-hero__phrase {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0 4px;
+    vertical-align: top;
+  }
+  .home-hero__phrase-text { position: relative; z-index: 3; }
+  .home-hero__marker {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    fill: var(--color-marker);
+    transition: translate 1s var(--ease-marker) 2.3s;
+  }
+  :global(html.js:not([data-loaded])) .home-hero__marker { translate: -101% 0; }
+
+  .home-hero__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Fluid wordmark: fills the content width. "4K Projects" in Source Serif
+     is ~4.95em wide, so divide the available width by that. */
+  .home-hero__wordmark {
+    margin: 0;
+    font-family: "Source Serif 4 Regular", serif;
+    font-size: calc((100vw - 2 * var(--gutter)) / 4.95);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    transition: opacity 700ms var(--ease-bio) 800ms;
+  }
+  :global(html.js:not([data-loaded])) .home-hero__wordmark { opacity: 0.001; }
+
+  .home-hero__meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px;
+    line-height: 39px;
+    overflow: hidden;
+  }
+  .home-hero__meta p { margin: 0; white-space: pre; }
+  @media (min-width: 810px) {
+    .home-hero__meta { font-size: 20px; }
+  }
+</style>

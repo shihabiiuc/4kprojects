@@ -1,0 +1,137 @@
+---
+// src/components/PricingTabs.astro
+import Lines from './Lines.astro';
+
+interface Props {
+  tabs: { id: string; label: string }[];
+}
+
+const { tabs } = Astro.props;
+---
+
+<!-- Price brackets as tabs. Each tab shows its own description and gallery
+     (see PricingGallery). The row slides up into place after load. -->
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist" aria-label="Pricing" data-tabs>
+    {tabs.map((tab, i) => (
+      <>
+        {i > 0 && (
+          <span class="tabs__slash" aria-hidden="true"><span data-reveal="line" data-reveal-on="mount" style="--reveal-start: 0.4s"><Lines text="/" /></span></span>
+        )}
+        <button
+          class="tabs__tab"
+          type="button"
+          role="tab"
+          id={`tab-${tab.id}`}
+          aria-controls={`panel-${tab.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-tab={tab.id}
+        ><span data-reveal="line" data-reveal-on="mount" style="--reveal-start: 0.4s"><Lines text={tab.label} /></span></button>
+      </>
+    ))}
+  </div>
+</div>
+
+<script>
+  // Click or arrow keys switch tabs; the matching panel and description show.
+  for (const list of document.querySelectorAll<HTMLElement>('[role="tablist"][data-tabs]')) {
+    const tabs = [...list.querySelectorAll<HTMLElement>('[role="tab"]')];
+
+    const select = (tab: HTMLElement, focus = false) => {
+      for (const t of tabs) {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute('aria-controls') ?? '');
+        if (panel) panel.hidden = !on;
+        for (const d of document.querySelectorAll<HTMLElement>(`[data-tab-description="${t.dataset.tab}"]`)) d.hidden = !on;
+      }
+      if (focus) tab.focus();
+    };
+
+    list.addEventListener('click', (e) => {
+      const tab = (e.target as Element).closest<HTMLElement>('[role="tab"]');
+      if (tab && tab.getAttribute('aria-selected') !== 'true') select(tab);
+    });
+
+    list.addEventListener('keydown', (e) => {
+      const i = tabs.indexOf(document.activeElement as HTMLElement);
+      if (i < 0) return;
+      const next =
+        e.key === 'ArrowRight' ? (i + 1) % tabs.length
+        : e.key === 'ArrowLeft' ? (i - 1 + tabs.length) % tabs.length
+        : e.key === 'Home' ? 0
+        : e.key === 'End' ? tabs.length - 1
+        : -1;
+      if (next < 0) return;
+      e.preventDefault();
+      select(tabs[next], true);
+    });
+  }
+</script>
+
+<style>
+  .tabs-wrap {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    overflow: hidden;
+    padding: 25px 20px;
+  }
+  @media (min-width: 810px) {
+    .tabs-wrap { padding-inline: 30px; }
+  }
+
+  .tabs {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px 8px;
+    width: 100%;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 500;
+    transition: translate 700ms var(--ease-rise) 600ms;
+  }
+  :global(html.js:not([data-loaded])) .tabs { translate: 0 500px; }
+  @media (min-width: 810px) {
+    .tabs { flex-wrap: nowrap; gap: 10px; padding-right: 30px; }
+  }
+
+  .tabs__tab,
+  .tabs__slash {
+    white-space: pre;
+    opacity: 0.4;
+  }
+  .tabs__tab {
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    font-size: 20px;
+    line-height: 24px;
+    cursor: pointer;
+    transition: opacity 400ms var(--ease-bio);
+  }
+  .tabs__tab[aria-selected="true"] { opacity: 1; }
+  .tabs__slash { font-size: 18px; line-height: 21.6px; }
+
+  @media (min-width: 810px) {
+    .tabs__tab,
+    .tabs__slash { font-size: 22px; line-height: 26.4px; }
+  }
+  @media (min-width: 810px) and (hover: hover) {
+    .tabs__tab:hover { opacity: 1; }
+  }
+  @media (min-width: 1440px) {
+    .tabs__tab,
+    .tabs__slash { font-size: 28px; line-height: 33.6px; }
+  }
+</style>

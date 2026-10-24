@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+import VisualisationHero from '../components/VisualisationHero.astro';
+import PricingTabs from '../components/PricingTabs.astro';
+import PricingGallery from '../components/PricingGallery.astro';
+import Footer from '../components/Footer.astro';
+
+import content from '../data/visualisation.json';
+import type { MasonryItem } from '../components/MasonryGallery.astro';
+
+const tabs = content.tabs.map((t) => ({ ...t, items: t.items as MasonryItem[] }));
+---
+
+<Layout title={content.meta.title} description={content.meta.description} page="mist">
+  <Header />
+  <main class="vis-main">
+    <!-- 1. PAGE TITLE -->
+    <VisualisationHero title={content.title} />
+
+    <!-- 2. PRICE TABS -->
+    <PricingTabs tabs={tabs} />
+
+    <!-- 3. DESCRIPTION + GALLERY FOR THE SELECTED TAB (black) -->
+    <PricingGallery tabs={tabs} library={content.library} />
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .vis-main { position: relative; }
+</style>

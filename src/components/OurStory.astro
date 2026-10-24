@@ -2,30 +2,81 @@
 // src/components/OurStory.astro
 interface Props {
   title: string;
-  lead: string;
   paragraphs: string[];
 }
 
-const { title, lead, paragraphs } = Astro.props;
+const { title, paragraphs } = Astro.props;
 ---
 
-<section class="story-nav">
-  <div class="w-full max-w-[1380px] flex flex-col lg:flex-row justify-between gap-[var(--nav-gap)]">
-    <div class="lg:w-auto">
-      <h2 class="section-heading text-[color:var(--text-on-dark)]">{title}</h2>
+<section class="story">
+  <div class="story__inner">
+    <div class="story__heading">
+      <h2>{title}</h2>
     </div>
-
-    <div class="flex flex-col items-start" style="width: 461px; max-width: 100%;">
-      <p class="hero-subtitle text-[color:var(--text-on-dark)] m-0">{lead}</p>
-
-      {paragraphs.map((p, i) => (
-        <p
-          class="body-copy text-[color:var(--text-on-dark)]"
-          style={`margin-top: ${i === 0 ? '20px' : '20px'};`}
-        >
-          {p}
-        </p>
-      ))}
+    <div class="story__copy">
+      {paragraphs.map((p) => <p>{p}</p>)}
     </div>
   </div>
 </section>
+
+<style>
+  .story {
+    position: relative;
+    padding: 40px var(--gutter);
+    background: #000;
+    color: var(--color-sand);
+  }
+  @media (min-width: 810px) {
+    .story { padding-block: 50px; }
+  }
+  @media (min-width: 1200px) {
+    .story { padding-block: 100px; }
+  }
+
+  .story__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-bottom: 10px;
+  }
+  @media (min-width: 810px) {
+    .story__inner { flex-direction: row; justify-content: space-between; gap: 0; }
+  }
+
+  .story__heading { padding-bottom: 10px; }
+  @media (min-width: 810px) {
+    .story__heading { width: 42%; }
+  }
+  @media (min-width: 1200px) {
+    .story__heading { width: auto; flex: 1; }
+  }
+
+  .story__heading h2 {
+    margin: 0;
+    font-size: 46px;
+    line-height: 1;
+    white-space: pre-line;
+  }
+  @media (min-width: 810px) {
+    .story__heading h2 { font-size: 56px; }
+  }
+  @media (min-width: 1200px) {
+    .story__heading h2 { font-size: 64px; }
+  }
+
+  .story__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 810px) {
+    .story__copy { flex: 1; gap: 1lh; font-size: 16px; line-height: 19.2px; }
+  }
+  @media (min-width: 1200px) {
+    .story__copy { flex: none; width: 461px; gap: 20px; font-size: 18px; line-height: 21.6px; }
+  }
+  .story__copy p { margin: 0; }
+</style>

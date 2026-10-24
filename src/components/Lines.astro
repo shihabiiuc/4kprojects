@@ -1,0 +1,20 @@
+---
+// src/components/Lines.astro
+// Renders text for a [data-reveal="line"] parent, matching the live site:
+// each word is a span of single-letter spans (`> span > span`), so motion.ts
+// can group letters by rendered line. Words stay unbroken, except long ones
+// (over 12 characters), which may wrap mid-word. Screen readers get the plain
+// text from the sr-only copy. Kept on one line with no <style> block: any
+// stray whitespace shows up as extra space in `white-space: pre` parents
+// (the pricing tabs).
+import { words } from '../utils/words';
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+const MAX_UNBROKEN = 12;
+---
+
+{words(text).map((w, i) => <>{i > 0 && ' '}<span style={w.length <= MAX_UNBROKEN ? 'white-space: nowrap' : undefined} aria-hidden="true">{[...w].map((ch) => <span>{ch}</span>)}</span></>)}<span class="sr-only">{text}</span>

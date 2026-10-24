@@ -1,188 +1,168 @@
 ---
 // src/components/TeamSection.astro
-
+interface Member {
+  name: string;
+  role: string;
+  info: string;
+  image: string;
+}
 interface Props {
-  data: {
-    title: string;
-    subtitle: string;
-    members: Array<{
-      name: string;
-      role: string;
-      image: string;
-      info?: string;
-    }>;
-    highlight: { count: string; label: string; text: string };
-  };
+  title: string;
+  subtitle: string;
+  members: Member[];
 }
 
-const { data } = Astro.props;
+const { title, subtitle, members } = Astro.props;
 ---
 
-<section id="team" class="team-section">
-  <div class="page-container">
+<section class="team">
+  <div class="team__heading">
+    <h2>{title}</h2>
+    <p>{subtitle}</p>
+  </div>
 
-    <!-- SECTION HEADER -->
-    <div class="team-section__header">
-      <h2 class="section-heading">{data.title}</h2>
-      <p class="body-copy team-section__subtitle">{data.subtitle}</p>
-    </div>
-
-    <!-- TEAM CARDS GRID -->
-    <div class="team-grid">
-      {data.members.map((member) => {
-        const imageSrc = member.image.replace(/^public\//, "/");
-        return (
-          <a href="#" class="team-card group">
-            <div class="team-card__media">
-              <img
-                src={imageSrc}
-                alt={member.name}
-                width="896"
-                height="1088"
-                loading="lazy"
-                decoding="async"
-                class="team-card__img"
-              />
-              {member.info && (
-                <div class="team-card__overlay">
-                  <p class="body-copy">{member.info}</p>
-                </div>
-              )}
-            </div>
-            <h3 class="team-name team-card__name">{member.name}</h3>
-            <p class="team-role team-card__role">{member.role}</p>
-          </a>
-        );
-      })}
-    </div>
-
-    <!-- HIGHLIGHT PANEL -->
-    <div class="team-highlight">
-      <div class="team-highlight__count">
-        <span class="team-meta-number">{data.highlight.count}</span>
-        <span class="team-meta-label">{data.highlight.label}</span>
-      </div>
-      <p class="body-copy team-highlight__text">{data.highlight.text}</p>
-    </div>
-
+  <!-- Hovering (or keyboard-focusing) a card fades the photo to the bio. -->
+  <div class="team__grid">
+    {members.map((m) => (
+      <article class="team-card" tabindex="0">
+        <div class="team-card__media">
+          <img
+            src={m.image}
+            alt={m.name}
+            sizes="(min-width: 1200px) 33vw, (min-width: 810px) 50vw, 100vw"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="team-card__bio">
+            <p>{m.info}</p>
+          </div>
+        </div>
+        <h3 class="team-card__name">{m.name}</h3>
+        <p class="team-card__role">{m.role}</p>
+      </article>
+    ))}
   </div>
 </section>
 
 <style>
-  .team-section {
+  .team {
     position: relative;
-    z-index: 3;
-    background-color: var(--bg-page);
-    padding-top: var(--team-intro-pt);
-    padding-bottom: var(--team-intro-pb);
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px var(--gutter);
+    background: var(--color-sand);
+  }
+  @media (min-width: 810px) {
+    .team { padding-top: 50px; }
+  }
+  @media (min-width: 1200px) {
+    .team { padding-top: 100px; }
   }
 
-  .team-section__header {
+  .team__heading {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    margin-bottom: 40px;
+  }
+  .team__heading h2 {
+    margin: 0;
+    font-size: 46px;
+    line-height: 1;
+  }
+  .team__heading p {
+    margin: 0;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 810px) {
+    .team__heading h2 { font-size: 56px; }
+    .team__heading p { font-size: 16px; line-height: 19.2px; }
+  }
+  @media (min-width: 1200px) {
+    .team__heading h2 { font-size: 64px; }
+    .team__heading p { width: 50%; font-size: 18px; line-height: 21.6px; }
   }
 
-  .team-section__subtitle {
-    max-width: 690px;
-  }
-
-  .team-grid {
+  .team__grid {
     display: grid;
-    grid-template-columns: var(--team-cols);
-    grid-auto-rows: var(--team-cell-h);
-    column-gap: var(--team-gap-x);
-    row-gap: var(--team-gap-y);
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(286px, 1fr));
+    gap: 45px;
+  }
+  @media (min-width: 810px) {
+    .team__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 20px; }
+  }
+  @media (min-width: 1200px) {
+    .team__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 
   .team-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
+    cursor: pointer;
+    outline-offset: 4px;
+    font-family: "DM Sans", sans-serif;
   }
 
   .team-card__media {
     position: relative;
-    width: 100%;
     height: 535px;
-    border-radius: var(--radius-card);
-    border: 1px solid var(--text-primary, #000);
     overflow: hidden;
-    background-color: var(--bg-page);
+    border-radius: 20px;
   }
-
-  .team-card__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: opacity 300ms ease-out;
-  }
-
-  .team-card__overlay {
+  .team-card__media::after {
+    content: "";
     position: absolute;
     inset: 0;
-    padding: 24px;
-    background-color: var(--bg-page);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    opacity: 0;
-    transition: opacity 300ms ease-out;
-    overflow-y: auto;
+    border: 1px solid #000;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .team-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
   }
 
-  .group:hover .team-card__overlay { opacity: 1; }
-  .group:hover .team-card__img { opacity: 0; }
+  .team-card__bio {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--color-sand);
+    opacity: 0;
+    transition: opacity 400ms var(--ease-card);
+  }
+  .team-card__bio p {
+    margin: 0;
+    padding: 25px 20px 0;
+    font-size: 18px;
+    line-height: 21.6px;
+    opacity: 0;
+    transition: opacity 400ms var(--ease-bio);
+  }
+  .team-card:focus-visible .team-card__bio,
+  .team-card:focus-visible .team-card__bio p { opacity: 1; }
+  .team-card:focus-visible .team-card__bio p { transition-delay: 300ms; }
+  @media (hover: hover) {
+    .team-card:hover .team-card__bio,
+    .team-card:hover .team-card__bio p { opacity: 1; }
+    .team-card:hover .team-card__bio p { transition-delay: 300ms; }
+  }
 
   .team-card__name {
-    margin-top: 20px;
+    margin: 20px 0 0;
     padding-left: 20px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 28px;
+    line-height: 33.6px;
+    font-weight: 500;
   }
-
   .team-card__role {
-    margin-top: 8px;
+    margin: 10px 0 0;
     padding-left: 20px;
-  }
-
-  /* HIGHLIGHT PANEL — mobile default: single column, 40px vertical gap */
-  .team-highlight {
-    margin-top: 40px;
-    padding: 30px;
-    border-radius: var(--radius-card);
-    border: 1px solid black;
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 40px;
-    align-items: start;
-  }
-
-  .team-highlight__count {
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    align-self: center;
-    gap: 0;
-  }
-
-  .team-highlight__text {
-    max-width: 480px;
-  }
-
-  /* Desktop: two columns, text pushed to the right */
-  @media (min-width: 1200px) {
-    .team-highlight {
-      grid-template-columns: 1fr 2fr;
-      column-gap: 40px;
-      row-gap: 0;
-    }
-
-    .team-highlight__text {
-      justify-self: end;
-    }
+    font-size: 18px;
+    line-height: 21.6px;
+    white-space: pre;
   }
 </style>

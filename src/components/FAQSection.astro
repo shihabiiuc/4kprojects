@@ -1,134 +1,139 @@
 ---
 // src/components/FAQSection.astro
+import Words from './Words.astro';
+
 interface Props {
-  questions: Array<{ q: string; a: string }>;
+  title: string[];
+  items: { q: string; a: string }[];
 }
 
-const { questions } = Astro.props;
+const { title, items } = Astro.props;
 ---
 
-<section class="faq-section">
-  <div class="faq-section__inner">
-    <!-- Left sticky title -->
-    <div class="faq-section__title">
-      <h2 class="section-heading">Frequently<br />Asked Questions</h2>
+<section class="faq">
+  <div class="faq__inner">
+    <div class="faq__heading">
+      <h2 data-reveal="word" data-reveal-on="view">
+        {title.map((line, i) => <>{i > 0 && <br />}<Words text={line} /></>)}
+      </h2>
     </div>
 
-    <!-- Right accordion -->
-    <div class="faq-list">
-      {questions.map((item, index) => (
-        <div class="faq-item" data-index={index}>
-          <button
-            type="button"
-            class="faq-question-row"
-            aria-expanded="false"
-            aria-controls={`faq-answer-${index}`}
-            id={`faq-question-${index}`}
-          >
-            <h6 class="faq-question">{item.q}</h6>
-            <span class="faq-icon" aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </span>
-          </button>
-          <div
-            id={`faq-answer-${index}`}
-            class="faq-answer-wrap"
-            role="region"
-            aria-labelledby={`faq-question-${index}`}
-            hidden
-          >
-            <p class="faq-answer">{item.a}</p>
-          </div>
-        </div>
+    <div class="faq__list">
+      {items.map((item) => (
+        <details class="faq__item">
+          <summary>
+            <span>{item.q}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </summary>
+          <p>{item.a}</p>
+        </details>
       ))}
     </div>
   </div>
 </section>
 
 <style>
-  .faq-section {
-    position: relative; 
-    z-index: 3;
-    padding: var(--faq-py) var(--faq-px);
-    background-color: var(--bg-page);
+  .faq {
+    position: relative;
+    padding: 50px var(--gutter);
+    background: var(--color-sand);
+    font-family: "DM Sans", sans-serif;
+  }
+  @media (min-width: 810px) {
+    .faq { padding: 96px 64px; }
+  }
+  @media (min-width: 1200px) {
+    .faq { padding: 80px 30px; }
   }
 
-  /* CHANGED: two-column at 1200+, stacked below. */
-  .faq-section__inner {
+  .faq__inner {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 48px;
   }
-
   @media (min-width: 1200px) {
-    .faq-section__inner {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 128px; /* from the dump */
-    }
-    .faq-section__title { flex: 1 1 50%; position: sticky; top: var(--faq-py);  }
-    .faq-list { flex: 1 1 50%; }
+    .faq__inner { flex-direction: row; align-items: flex-start; gap: 128px; }
   }
 
-  .faq-item {
-    border-bottom: 1px solid  black;
+  .faq__heading { padding-top: 7px; }
+  @media (min-width: 1200px) {
+    .faq__heading { position: sticky; top: 80px; flex: 1; }
   }
-  .faq-item:first-child {
-    border-top: 0px solid var(--border-color);
+  .faq__heading h2 {
+    margin: 0;
+    font-size: 46px;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .faq__heading h2 { font-size: 56px; }
+  }
+  @media (min-width: 1200px) {
+    .faq__heading h2 { font-size: 64px; }
   }
 
-  /* CHANGED: row is 72px tall (single line) with 20px vertical padding. */
-  .faq-question-row {
-    width: 100%;
-    padding: 20px 20px 20px 0;
+  .faq__list {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+  }
+  @media (min-width: 1200px) {
+    .faq__list { flex: 1; }
+  }
+
+  /* Answers open and close smoothly where ::details-content is supported. */
+  .faq__item {
+    padding-right: 20px;
+    interpolate-size: allow-keywords;
+  }
+  .faq__item + .faq__item {
+    padding-top: 10px;
+    border-top: 1px solid #000;
+  }
+  .faq__item::details-content {
+    height: 0;
+    overflow: clip;
+    transition: height 500ms var(--ease-faq), content-visibility 500ms var(--ease-faq) allow-discrete;
+  }
+  .faq__item[open]::details-content { height: auto; }
+
+  summary {
+    display: flex;
     align-items: center;
     gap: 24px;
-    background: none;
-    border: none;
+    padding: 20px 0;
+    list-style: none;
     cursor: pointer;
-    text-align: left;
   }
-
-  .faq-icon {
-    flex: 0 0 32px;
+  summary::-webkit-details-marker { display: none; }
+  summary span {
+    flex: 1;
+    font-size: 18px;
+    line-height: 21.6px;
+    font-weight: 500;
+  }
+  @media (min-width: 810px) {
+    summary span { font-size: 20px; line-height: 24px; }
+  }
+  @media (min-width: 1200px) {
+    summary span { font-size: 24px; line-height: 28.8px; }
+  }
+  summary svg {
+    flex: none;
     width: 32px;
     height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 200ms ease;
+    transition: rotate 500ms var(--ease-faq);
   }
+  .faq__item[open] summary svg { rotate: 90deg; }
 
-  .faq-item.is-open .faq-icon {
-    transform: rotate(90deg);
+  .faq__item p {
+    margin: 0;
+    padding: 0 20px 40px 0;
+    font-size: 14px;
+    line-height: 16.8px;
   }
-
-  .faq-answer-wrap {
-    padding: 0 20px 20px 0;
+  @media (min-width: 1200px) {
+    .faq__item p { font-size: 16px; line-height: 19.2px; }
   }
 </style>
-
-<script>
-  function initFaq() {
-    document.querySelectorAll<HTMLElement>('.faq-item').forEach((item) => {
-      const btn = item.querySelector<HTMLButtonElement>('.faq-question-row');
-      const answer = item.querySelector<HTMLElement>('.faq-answer-wrap');
-      if (!btn || !answer) return;
-
-      btn.addEventListener('click', () => {
-        const isOpen = item.classList.toggle('is-open');
-        btn.setAttribute('aria-expanded', String(isOpen));
-        answer.hidden = !isOpen;
-      });
-    });
-  }
-
-  initFaq();
-  document.addEventListener('astro:page-load', initFaq);
-</script>

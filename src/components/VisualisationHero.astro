@@ -1,0 +1,71 @@
+---
+// src/components/VisualisationHero.astro
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!-- Big page title. Fades in after load (and rises on tablets); on phones it
+     is sized to fill the full width. -->
+<section class="vis-hero">
+  <h1 class="vis-hero__title">
+    <span class="vis-hero__fit">
+      <span>{title}</span>
+    </span>
+  </h1>
+</section>
+
+<style>
+  .vis-hero {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+    padding: 200px var(--gutter) 0;
+    pointer-events: none;
+  }
+  .vis-hero > * { pointer-events: auto; }
+
+  .vis-hero__title {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 0;
+    color: #000;
+    line-height: 0.8;
+    transition: opacity 700ms var(--ease-bio) 800ms, translate 700ms var(--ease-bio) 800ms;
+  }
+  :global(html.js:not([data-loaded])) .vis-hero__title { opacity: 0.001; }
+  @media (min-width: 810px) and (max-width: 1199px) {
+    .vis-hero__title {
+      transition: opacity 1s var(--ease-reveal), translate 1s var(--ease-reveal);
+    }
+    :global(html.js:not([data-loaded])) .vis-hero__title { translate: 0 30px; }
+  }
+
+  .vis-hero__fit {
+    display: block;
+    width: 100%;
+    container-type: inline-size;
+  }
+  .vis-hero__fit > span { display: block; }
+
+  /* Phones: "Visualisation" fills the width (same ratio the live site measures). */
+  @media (max-width: 809px) {
+    .vis-hero__fit > span {
+      padding-bottom: calc(12.8 / 398 * 100cqw);
+      font-size: 16.0804cqw;
+      white-space: pre;
+    }
+  }
+  @media (min-width: 810px) {
+    .vis-hero__fit > span { font-size: 104px; }
+  }
+  @media (min-width: 1200px) {
+    .vis-hero__fit > span { font-size: 150px; line-height: 0.8; }
+  }
+</style>

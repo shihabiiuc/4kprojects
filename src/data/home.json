@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "title": "4K - Pitch-Winning CGIs for Workplace Designers",
+    "description": "Photorealistic visualisation, animation and virtual tours for workplace and interior designers."
+  },
+  "hero": {
+    "intro": [
+      {
+        "text": "Welcome to 4K Projects."
+      },
+      {
+        "text": "We produce ",
+        "highlight": "pitch-winning CGIs"
+      },
+      {
+        "text": "for ",
+        "highlight": "workplace designers"
+      }
+    ],
+    "wordmark": "4K Projects",
+    "left": "EST 2016",
+    "right": "LONDON"
+  },
+  "overview": {
+    "title": [
+      "Design-led visualisations.",
+      "Seamless outsourcing."
+    ],
+    "body": "Outsourcing CGIs doesn’t have to mean delays, frustration, or compromise. At 4K Projects, we’re designers first, so we understand your world, your pressures, and exactly what you need to impress clients. From photorealistic renders to immersive animations, every project is overseen by an industry expert who speaks your language and keeps things simple. No hidden costs, no chasing freelancers - just great visuals, fixed pricing, and turnaround times that keep you ahead. Discover how effortless outsourcing can be when every step has been design by people who know your world inside and out.",
+    "cta": {
+      "label": "SEE OUR WORK",
+      "href": "/visualisation"
+    }
+  },
+  "reel": {
+    "sources": [
+      {
+        "src": "/videos/home-reel.webm",
+        "type": "video/webm; codecs=\"av01.0.08M.08\""
+      },
+      {
+        "src": "/videos/home-reel.mp4",
+        "type": "video/mp4; codecs=\"avc1.640028\""
+      }
+    ],
+    "poster": "/images/home/home-reel-poster.webp",
+    "label": "Showreel video"
+  },
+  "statsTop": [
+    "Established in 2016",
+    "1000+ projects delivered",
+    "Hundreds of workplace wins"
+  ],
+  "services": {
+    "title": "What we do",
+    "items": [
+      {
+        "title": "Static Visualisation",
+        "body": "Premium photorealistic renders delivered by experienced designers who understand your vision and commercial requirements perfectly.",
+        "href": "/visualisation",
+        "cta": "VIEW PROJECTS"
+      },
+      {
+        "title": "Animation",
+        "body": "Captivating walkthrough animations and flyovers that bring your designs to life with cinematic quality and storytelling.",
+        "href": "/animation",
+        "cta": "VIEW PROJECTS"
+      },
+      {
+        "title": "Design Services",
+        "body": "Expert design consultation and development support from industry professionals who've worked on leading commercial projects."
+      },
+      {
+        "title": "Unreal Engine",
+        "body": "Cutting-edge real-time visualization using Unreal Engine for interactive presentations and immersive client experiences that impress.",
+        "href": "/unreal-engine",
+        "cta": "VIEW PROJECTS"
+      },
+      {
+        "title": "Virtual Tours",
+        "body": "Interactive AR walkthroughs and virtual tours that let clients explore your designs as if they're walking through.",
+        "href": "/virtual-tours",
+        "cta": "VIEW PROJECTS"
+      },
+      {
+        "title": "Other services",
+        "body": "From concept sketches to post-production, we offer comprehensive visualization support tailored to your project's unique needs."
+      }
+    ]
+  },
+  "gallery": [
+    {
+      "image": "/images/home/meeting-table-lounge.webp",
+      "alt": "Meeting table and lounge with a curved glass room"
+    },
+    {
+      "image": "/images/home/meeting-room-round-table.webp",
+      "alt": "Meeting room with a round table and a shelving wall"
+    },
+    {
+      "image": "/images/home/atrium-cafe.webp",
+      "alt": "Atrium café with a round planted bench"
+    }
+  ],
+  "statsBottom": [
+    "20+ skilled artists",
+    "Same-day project starts",
+    "Transparent fixed pricing"
+  ],
+  "clients": {
+    "logos": [
+      {
+        "image": "/images/clients/aecom.webp",
+        "alt": "AECOM"
+      },
+      {
+        "image": "/images/clients/aware-design.webp",
+        "alt": "Aware Design"
+      },
+      {
+        "image": "/images/clients/bdp.webp",
+        "alt": "BDP"
+      },
+      {
+        "image": "/images/clients/bene.webp",
+        "alt": "Bene"
+      },
+      {
+        "image": "/images/clients/forme-uk.webp",
+        "alt": "Forme UK"
+      },
+      {
+        "image": "/images/clients/hawkins-brown.webp",
+        "alt": "Hawkins\\Brown"
+      },
+      {
+        "image": "/images/clients/designlsm.webp",
+        "alt": "DesignLSM"
+      },
+      {
+        "image": "/images/clients/estilo.webp",
+        "alt": "Estilo"
+      },
+      {
+        "image": "/images/clients/interior-architects.webp",
+        "alt": "IA Interior Architects"
+      },
+      {
+        "image": "/images/clients/maris-interiors.webp",
+        "alt": "Maris Interiors"
+      },
+      {
+        "image": "/images/clients/mcm.webp",
+        "alt": "MCM"
+      },
+      {
+        "image": "/images/clients/morgan-lovell.webp",
+        "alt": "Morgan Lovell"
+      },
+      {
+        "image": "/images/clients/office-principles.webp",
+        "alt": "Office Principles"
+      },
+      {
+        "image": "/images/clients/oktra.webp",
+        "alt": "Oktra"
+      },
+      {
+        "image": "/images/clients/nbda-architects.webp",
+        "alt": "NBDA Architects"
+      },
+      {
+        "image": "/images/clients/odgroup.webp",
+        "alt": "ODGroup"
+      },
+      {
+        "image": "/images/clients/parkeray.webp",
+        "alt": "Parkeray"
+      },
+      {
+        "image": "/images/clients/perkins-will.webp",
+        "alt": "Perkins&Will"
+      },
+      {
+        "image": "/images/clients/portland.webp",
+        "alt": "Portland"
+      },
+      {
+        "image": "/images/clients/quarterback.webp",
+        "alt": "Quarterback"
+      },
+      {
+        "image": "/images/clients/tda.webp",
+        "alt": "TDA"
+      },
+      {
+        "image": "/images/clients/thirdway.webp",
+        "alt": "Thirdway"
+      },
+      {
+        "image": "/images/clients/steyn-group.webp",
+        "alt": "Steyn Group"
+      },
+      {
+        "image": "/images/clients/task.webp",
+        "alt": "TASK"
+      },
+      {
+        "image": "/images/clients/thompsons.webp",
+        "alt": "Thompsons"
+      },
+      {
+        "image": "/images/clients/total-projects.webp",
+        "alt": "Total Projects"
+      },
+      {
+        "image": "/images/clients/tp-bennett.webp",
+        "alt": "tp bennett"
+      },
+      {
+        "image": "/images/clients/tsk.webp",
+        "alt": "TSK"
+      },
+      {
+        "image": "/images/clients/two.webp",
+        "alt": "TWO"
+      }
+    ]
+  },
+  "reviews": {
+    "widgetId": "6877e097537ef500140361ee"
+  }
+}

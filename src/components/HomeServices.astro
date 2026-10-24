@@ -1,0 +1,146 @@
+---
+// src/components/HomeServices.astro
+interface Service {
+  title: string;
+  body: string;
+  href?: string;
+  cta?: string;
+}
+interface Props {
+  title: string;
+  items: Service[];
+}
+
+import Words from './Words.astro';
+
+const { title, items } = Astro.props;
+---
+
+<section id="services" class="services">
+  <h2 class="services__title" data-reveal="word" data-reveal-on="view"><Words text={title} /></h2>
+
+  <div class="services__grid">
+    {items.map((item, i) => (
+      <!-- Cards rise in together once the section reaches mid-screen,
+           staggered 0.2s per column. -->
+      <article
+        class="service-card trigger-rise"
+        data-scroll-trigger
+        data-trigger="services"
+        data-once
+        style={`--col2-delay: ${(i % 2) * 0.2}s; --col3-delay: ${(i % 3) * 0.2}s`}
+      >
+        <h3 class="service-card__title" data-reveal="word" data-reveal-on="view"><Words text={item.title} /></h3>
+        <div class="service-card__bottom">
+          <p class="service-card__body">{item.body}</p>
+          {item.href && (
+            <div class="service-card__cta">
+              <a href={item.href}>{item.cta}</a>
+            </div>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .services {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px var(--gutter);
+    background: var(--color-beige);
+  }
+  @media (min-width: 810px) {
+    .services { gap: 20px; padding-block: 60px; }
+  }
+  @media (min-width: 1200px) {
+    .services { gap: 50px; padding: 0 30px 80px; }
+  }
+
+  .services__title {
+    margin: 0;
+    font-size: var(--heading-size);
+    line-height: var(--heading-lh);
+  }
+
+  .services__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 810px) {
+    .services__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1200px) {
+    .services__grid { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 341px; row-gap: 50px; }
+  }
+
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 280px;
+    padding: 20px;
+    border: 1px solid #000;
+    border-radius: var(--radius-card);
+    --rise: 150px;
+    --rise-delay: 0s;
+    transition:
+      background-color 400ms ease,
+      color 400ms ease,
+      opacity 1s var(--ease-reveal) var(--rise-delay),
+      translate 1s var(--ease-reveal) var(--rise-delay);
+  }
+  @media (min-width: 810px) {
+    .service-card { --rise-delay: var(--col2-delay); }
+  }
+  @media (min-width: 1200px) {
+    .service-card { --rise-delay: var(--col3-delay); }
+  }
+  .service-card:hover { background: #000; color: var(--color-beige); }
+
+  .service-card__title {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1;
+  }
+  @media (min-width: 1200px) {
+    .service-card__title { font-size: 36px; }
+  }
+
+  .service-card__body {
+    margin: 0;
+    max-width: 440px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+
+  /* CTA collapses on desktop and opens on hover/focus (grid-rows trick). */
+  .service-card__cta {
+    display: grid;
+    grid-template-rows: 1fr;
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px;
+  }
+  .service-card__cta a {
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  @media (min-width: 1200px) {
+    .service-card__cta {
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 600ms var(--ease-reveal);
+    }
+    .service-card:hover .service-card__cta,
+    .service-card:focus-within .service-card__cta { grid-template-rows: 1fr; }
+  }
+  .service-card__cta a::before { content: ""; display: block; height: 30px; }
+</style>

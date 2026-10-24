@@ -1,0 +1,91 @@
+---
+// src/components/HomeOverview.astro
+interface Props {
+  title: string[];
+  body: string;
+  cta: { label: string; href: string };
+}
+
+import Words from './Words.astro';
+import Lines from './Lines.astro';
+
+const { title, body, cta } = Astro.props;
+---
+
+<!-- Black card with rounded top that slides over the sticky hero. -->
+<section id="overview" class="overview" data-nav-lines="beige">
+  <div class="overview__inner">
+    <h2 class="overview__title" data-reveal="word" data-reveal-on="view">
+      {title.map((line, i) => <>{i > 0 && <br />}<Words text={line} /></>)}
+    </h2>
+
+    <div class="overview__copy">
+      <p data-reveal="line" data-reveal-on="view" style="--reveal-start: 0.4s">
+        <Lines text={body} />
+      </p>
+      <div class="overview__cta-wrap trigger-rise" data-scroll-trigger data-trigger="overview" data-once>
+        <a href={cta.href} class="overview__cta">{cta.label}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .overview {
+    position: relative;
+    z-index: 1;
+    padding: 50px var(--gutter) 40px;
+    border-radius: 30px 30px 0 0;
+    background: #000;
+    color: var(--color-beige);
+  }
+  @media (min-width: 810px) {
+    .overview { padding-block: 60px; border-radius: 50px 50px 0 0; }
+  }
+  @media (min-width: 1200px) {
+    .overview { padding: 50px 30px 100px; }
+  }
+
+  .overview__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  @media (min-width: 810px) {
+    .overview__inner { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+  }
+
+  .overview__title {
+    margin: 0;
+    font-size: var(--heading-size);
+    line-height: var(--heading-lh);
+  }
+
+  .overview__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    font-family: "DM Sans", sans-serif;
+    font-size: var(--body-copy-size);
+    line-height: var(--body-copy-lh);
+  }
+  @media (min-width: 810px) {
+    .overview__copy { width: 301px; flex: none; }
+  }
+  @media (min-width: 1200px) {
+    .overview__copy { width: 461px; }
+  }
+  .overview__copy p { margin: 0; opacity: 0.6; }
+
+  .overview__cta-wrap {
+    transition: opacity 800ms var(--ease-reveal), translate 800ms var(--ease-reveal);
+  }
+
+  .overview__cta {
+    font-size: 16px;
+    border-bottom: 1px solid currentColor;
+    transition: opacity 300ms ease;
+  }
+  .overview__cta:hover { opacity: 0.6; }
+</style>

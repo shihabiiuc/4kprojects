@@ -1,368 +1,195 @@
 ---
 // src/components/Footer.astro
-const logoGrey = "/images/logos/4k-logo-grey.png";
-const biid = "/images/logos/british-industry-partner.png";
+// Text colour follows the page colour (--footer, set from <body data-page>).
+import UnderlineLink from './UnderlineLink.astro';
 ---
 
-<footer class="site-footer">
-  <div class="footer-inner">
+<footer class="site-footer" data-nav-lines="beige">
+  <!-- TOP ROW -->
+  <div class="footer-top">
+    <a href="/" class="footer-logo">
+      <span role="img" aria-label="4K Projects" class="footer-mask footer-mask--logo"></span>
+    </a>
 
-    <!-- TOP ROW -->
-    <div class="footer-top">
-      <div class="footer-logo">
-        <a href="/" aria-label="4K Projects">
-          <img src={logoGrey} alt="4K Projects" width="1765" height="1523" loading="lazy" />
-        </a>
-      </div>
-
-      <div class="footer-getintouch">
-        <div class="footer-headline">
-          <h2 class="footer-headline__line">Architectural visualisation outsourcing</h2>
-          <h2 class="footer-headline__line">As easy as it should be.</h2>
-
-          <div class="footer-cta">
-            <a href="/contact" class="footer-cta__link">
-              <span class="footer-cta__label">See our work</span>
-              <span class="footer-cta__line footer-cta__line--1"></span>
-              <span class="footer-cta__line footer-cta__line--2"></span>
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-prompt">
-          <p class="footer-prompt__text">
-            Get started with us by clicking
-            <a href="/contact" class="footer-link">here</a>
-          </p>
-        </div>
-      </div>
+    <div class="footer-headline">
+      <p>Architectural visualisation outsourcing</p>
+      <p>As easy as it should be.</p>
+      <UnderlineLink href="/visualisation" label="See our work" large />
     </div>
 
-    <!-- MIDDLE ROW -->
-    <div class="footer-mid">
-      <div class="footer-mid__inner">
-        <div class="footer-col footer-col--logo">
-          <img src={biid} alt="BIID Industry Partner" loading="lazy" />
-        </div>
-
-        <div class="footer-col footer-col--office">
-          <p class="footer-label">Head office</p>
-          <p class="footer-address">160 kemp house<br />City road, London<br />EC1V 2NX</p>
-        </div>
-
-        <div class="footer-col footer-col--hiring">
-          <p class="footer-label">Hiring</p>
-          <p class="footer-copy">We are always on the lookout for exciting new talent. If you are interested in working with us, either as a 3D artist or a project manager.</p>
-          <p class="footer-copy">Please drop us a message at: <a href="mailto:hiring@4kprojects.com" class="footer-link-inline">hiring@4kprojects.com</a></p>
-        </div>
-
-        <div class="footer-col footer-col--contact">
-          <p class="footer-label">Contact</p>
-          <p class="footer-copy">Be it a quote request, some feedback or you'd just like to say hello, we'd love to hear from you.</p>
-          <p class="footer-copy"><a href="mailto:info@4kprojects.com" class="footer-link-inline">Reach us at:</a></p>
-          <p class="footer-copy"><a href="mailto:info@4kprojects.com" class="footer-link-inline">info@4kprojects.com</a></p>
-          <p class="footer-copy"><a href="tel:+442033557507" class="footer-link-inline">+44 20 3355 7507</a></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- BOTTOM: WORDMARK -->
-    <!-- BOTTOM: WORDMARK -->
-<div class="footer-wordmark-wrap" aria-hidden="true">
-  <svg
-    class="footer-wordmark-svg"
-    viewBox="0 0 1140 280"
-    preserveAspectRatio="xMinYMin meet"
-  >
-    <text
-      x="0"
-      y="214"
-      textLength="100%"
-      lengthAdjust="spacing"
-      class="footer-wordmark-text"
-    >4K Projects</text>
-  </svg>
-</div>
-
+    <p class="footer-prompt">Get started with us by clicking <a href="/contact">here</a></p>
   </div>
+
+  <!-- MIDDLE ROW -->
+  <div class="footer-mid">
+    <span role="img" aria-label="BIID Industry Partner" class="footer-mask footer-mask--biid"></span>
+
+    <div class="footer-col footer-col--office">
+      <h2>Head office</h2>
+      <p>160 kemp house<br />City road, London<br />EC1V 2NX</p>
+    </div>
+
+    <div class="footer-col">
+      <h2>Hiring</h2>
+      <p>
+        We are always on the lookout for exciting new talent. If you are interested in working with us, either as a 3D artist or a project manager. <br /><br />Please drop us a message at: <a href="mailto:hiring@4kprojects.com" target="_blank" rel="noopener">hiring@4kprojects.com</a>
+      </p>
+    </div>
+
+    <div class="footer-col footer-col--contact">
+      <h2>Contact</h2>
+      <p>
+        Be it a quote request, some feedback or you'd just like to say hello, we'd love to hear from you. <br /><br />Reach us at: <br />
+        <a href="mailto:info@4kprojects.com" target="_blank" rel="noopener">info@4kprojects.com</a> <br />
+        <a href="tel:+442039362228" target="_blank" rel="noopener">+44 20 3936 2228</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- BOTTOM: WORDMARK, sized to fill the full width -->
+  <span class="footer-wordmark" aria-hidden="true">
+    <span>4K Projects</span>
+  </span>
 </footer>
 
 <style>
-  /* ===== SHELL ===== */
   .site-footer {
-    background-color: #000;
-    color: rgb(219, 220, 208);
-    padding: 50px 30px 30px;
+    position: relative;
+    z-index: 1;
+    padding: 50px var(--gutter);
     overflow: hidden;
+    background: #000;
+    color: var(--footer, var(--color-sand));
+  }
+  @media (min-width: 810px) {
+    .site-footer { padding-bottom: 30px; }
   }
 
-  .footer-inner {
+  /* Logos are PNG masks filled with the current text colour. */
+  .footer-mask {
+    display: block;
+    flex: none;
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+  }
+  .footer-mask--logo {
     width: 100%;
+    height: 100%;
+    mask-image: url("/images/logos/4k-logo-light.png");
+  }
+  .footer-mask--biid {
+    width: 170px;
+    height: 72px;
+    mask-image: url("/images/logos/biid-industry-partner.png");
+  }
+
+  /* ── Top row ── */
+  .footer-top {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 20px;
+  }
+  @media (min-width: 1200px) {
+    .footer-top { flex-direction: row; }
   }
 
-  /* ===== TOP ROW ===== */
-  .footer-top {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .footer-logo img {
+  .footer-logo {
     display: block;
-    width: 147px;
-    height: auto;
-    object-fit: cover;
+    flex: none;
+    width: 84px;
+    height: 72px;
   }
-
-  /* Middle of top row: headline-stack on left, prompt on right */
-  .footer-getintouch {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex: 1 1 0;
-    padding-left: 20px;
-    overflow: hidden;
+  @media (min-width: 810px) {
+    .footer-logo { width: 95px; height: 82px; }
+  }
+  @media (min-width: 1200px) {
+    .footer-logo { width: 147px; height: 127px; }
   }
 
   .footer-headline {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 0;
+    width: 100%;
+    height: 149px;
   }
-
-  .footer-headline__line {
-    font-family: "Source Serif 4 Regular", "Source Serif 4 Regular Placeholder", serif;
+  @media (min-width: 810px) {
+    .footer-headline { height: 94px; }
+  }
+  @media (min-width: 1200px) {
+    .footer-headline { width: auto; height: auto; flex: 1; }
+  }
+  .footer-headline p {
+    margin: 0;
+    font-family: "Source Serif 4 Regular", serif;
     font-size: 28px;
     line-height: 33.6px;
-    font-weight: 400;
-    color: rgb(219, 220, 208);
-    margin: 0;
-    white-space: pre-wrap;
   }
 
-  /* ===== CTA with the two-line swipe ===== */
-  .footer-cta {
-    position: relative;
-    z-index: 1;
-  }
-  .footer-cta__link {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 0 5px 0;
-    text-decoration: none;
-    color: rgb(219, 220, 208);
-    overflow: hidden;
-  }
-  .footer-cta__label {
-    position: relative;
-    z-index: 2;
-    font-family: "DM Sans", "DM Sans Placeholder", sans-serif;
-    font-size: 20px;
-    line-height: 22px;
-    color: rgb(219, 220, 208);
-  }
-  .footer-cta__line {
-    position: absolute;
-    left: 0;
-    height: 1px;
-    background: rgb(219, 220, 208);
-    z-index: 1;
-    transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-  }
-  .footer-cta__line--1 {
-    top: 25px;
-    width: 100%;
-    transform: scaleX(1);
-    transform-origin: right;
-  }
-  .footer-cta__line--2 {
-    top: 26px;
-    width: 100%;
-    left: -5px;
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-  .footer-cta__link:hover .footer-cta__line--1 { transform: scaleX(0); }
-  .footer-cta__link:hover .footer-cta__line--2 { transform: scaleX(1); }
-
-  /* ===== PROMPT (right side of top row) ===== */
   .footer-prompt {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-end;
-    gap: 10px;
-  }
-  .footer-prompt__text {
-    padding: 0 20px 5px 20px;
     margin: 0;
-    font-family: "Source Serif 4 Regular", "Source Serif 4 Regular Placeholder", serif;
+    padding-bottom: 5px;
+    font-family: "Source Serif 4 Regular", serif;
     font-size: 24px;
-    line-height: 24px;
-    font-weight: 400;
-    color: rgb(219, 219, 207);
-    white-space: pre-wrap;
+    line-height: 1;
   }
-  .footer-link {
-    color: inherit;
-    text-decoration: underline;
+  .footer-prompt a { text-decoration: underline; }
+  @media (min-width: 1200px) {
+    .footer-prompt { flex: none; margin-right: 20px; }
   }
 
-  /* ===== MIDDLE ROW ===== */
+  /* ── Middle row ── */
   .footer-mid {
-    width: 100%;
-    padding: 40px 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 40px;
-  }
-  .footer-mid__inner {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 40px;
-    width: 100%;
-    padding-top: 40px;
-  }
-
-  .footer-col {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding-bottom: 50px;
-    overflow: hidden;
+    gap: 70px;
+    margin-top: 80px;
+  }
+  @media (min-width: 810px) {
+    .footer-mid { flex-direction: row; gap: 40px; }
+  }
+  @media (max-width: 809px) {
+    .footer-mask--biid { order: 1; margin-top: -20px; }
   }
 
-  .footer-col--logo {
-    flex: 0 0 auto;
-  }
-  .footer-col--logo img {
-    display: block;
-    width: 170px;
-    height: 72.03px;
-    object-fit: cover;
-  }
-
-  .footer-col--office {
-    flex: 0 0 auto;
-    width: 131.22px;
-  }
-  .footer-col--hiring,
-  .footer-col--contact {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-
-  .footer-label {
-    font-family: "Source Serif 4 Regular", "Source Serif 4 Regular Placeholder", serif;
+  .footer-col h2 {
+    width: fit-content;
+    margin: 0;
+    font-family: "Source Serif 4 Regular", serif;
     font-size: 18px;
     line-height: 21.6px;
-    font-weight: 400;
-    color: rgb(219, 220, 208);
-    margin: 0;
-    white-space: pre;
   }
-
-  .footer-address,
-  .footer-copy {
-    font-family: "DM Sans", "DM Sans Placeholder", sans-serif;
-    font-size: 16px;
-    line-height: 19.2px;
-    font-weight: 400;
+  .footer-col p {
+    margin: 8px 0 0;
     color: rgba(255, 255, 255, 0.5);
-    margin: 0;
-    white-space: pre-wrap;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
   }
-  .footer-address { white-space: pre; }
-
-  .footer-link-inline {
-    color: rgba(255, 255, 255, 0.5);
-    text-decoration: none;
+  @media (min-width: 810px) {
+    .footer-col { flex: 1; min-width: 0; }
+    .footer-col--office { flex: none; }
+    .footer-col--contact p { font-size: 16px; line-height: 19.2px; }
   }
-  .footer-link-inline:hover { text-decoration: underline; }
-
-  /* ===== WORDMARK ===== */
-  /* ===== WORDMARK ===== */
-.footer-wordmark-wrap {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start; /* Changed from center to flex-start */
-  width: 100%;
-  overflow: visible;       /* Ensure descenders don't get cut by wrapper */
-  z-index: 10;
-}
-
-.footer-wordmark-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;       /* Prevents clipping if font metrics render larger */
-}
-
-.footer-wordmark-text {
-  font-family: "Source Serif 4 Regular", serif;
-  font-size: 214.941px;
-  font-weight: 400;
-  fill: rgb(219, 219, 207);
-}
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 1199px) {
-    .footer-top {
-      flex-direction: column;
-      gap: 20px;
-    }
-    .footer-getintouch {
-      flex-direction: column;
-      padding-left: 0;
-      gap: 50px;
-      width: 100%;
-    }
-    .footer-prompt {
-      align-items: flex-start;
-    }
-    .footer-prompt__text {
-      padding: 0 20px 5px 0;
-    }
-    .footer-address,
-    .footer-copy {
-      font-size: 14px;
-      line-height: 16.8px;
-    }
-    .footer-col--office { width: auto; }
+  @media (min-width: 1200px) {
+    .footer-col p { font-size: 16px; line-height: 19.2px; }
   }
 
-  @media (max-width: 809px) {
-    .site-footer { padding: 50px 20px 50px; }
-    .footer-logo img { width: 84px; }
-    .footer-mid__inner {
-      flex-direction: column;
-      gap: 20px;
-    }
-    .footer-col--logo,
-    .footer-col--office,
-    .footer-col--hiring,
-    .footer-col--contact {
-      width: 100%;
-      flex: 0 0 auto;
-    }
-    .footer-col--logo img { width: 170px; height: 72.03px; }
+  /* ── Wordmark ── */
+  .footer-wordmark {
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    container-type: inline-size;
+  }
+  @media (min-width: 810px) {
+    .footer-wordmark { margin-top: 90px; }
+  }
+  .footer-wordmark span {
+    display: block;
+    font-family: "Source Serif 4 Regular", serif;
+    /* "4K Projects" is ~5.3em wide, so this fills the container exactly. */
+    font-size: 18.854cqw;
+    line-height: 1.2;
+    white-space: nowrap;
   }
 </style>

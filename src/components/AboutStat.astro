@@ -1,0 +1,143 @@
+---
+// src/components/AboutStat.astro
+import Lines from './Lines.astro';
+
+interface Props {
+  count: number;
+  suffix: string;
+  label: string;
+  text: string;
+}
+
+const { count, suffix, label, text } = Astro.props;
+---
+
+<section class="stat">
+  <div class="stat__box">
+    <div class="stat__figure">
+      <p class="stat__number">
+        <span class="sr-only">{count}{suffix}</span>
+        <span aria-hidden="true" data-count-to={count}>{count}</span>
+        <span aria-hidden="true">{suffix}</span>
+      </p>
+      <p class="stat__label">{label}</p>
+    </div>
+    <p class="stat__text" data-reveal="line" data-reveal-on="view" style="--reveal-start: 0.4s">
+      <Lines text={text} />
+    </p>
+  </div>
+</section>
+
+<script>
+  // Counts up from 0 once half the number is on screen, easing out with a
+  // critically damped curve (same constants as the live site).
+  function settle(t: number) {
+    const ratio = 30 / 20;
+    const root = Math.sqrt(ratio * ratio - 1);
+    const a = -10 * (ratio - root);
+    const b = -10 * (ratio + root);
+    return (b * Math.exp(a * t) - a * Math.exp(b * t)) / (b - a);
+  }
+
+  function countUp(el: HTMLElement, to: number) {
+    const start = performance.now();
+    const frame = (now: number) => {
+      const remaining = settle((now - start) / 1000);
+      el.textContent = (to * (1 - remaining)).toFixed(0);
+      if (remaining * to > 0.001) requestAnimationFrame(frame);
+      else el.textContent = String(to);
+    };
+    requestAnimationFrame(frame);
+  }
+
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          observer.unobserve(entry.target);
+          const el = entry.target as HTMLElement;
+          countUp(el, Number(el.dataset.countTo));
+        }
+      },
+      { threshold: 0.5 }
+    );
+    document.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {
+      el.textContent = '0';
+      observer.observe(el);
+    });
+  }
+</script>
+
+<style>
+  .stat {
+    position: relative;
+    padding: 0 var(--gutter) 40px;
+    background: var(--color-sand);
+  }
+  @media (min-width: 810px) {
+    .stat { padding-bottom: 50px; }
+  }
+  @media (min-width: 1200px) {
+    .stat { padding-bottom: 80px; }
+  }
+
+  .stat__box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+    padding: 30px;
+    border-radius: 20px;
+    font-family: "DM Sans", sans-serif;
+  }
+  .stat__box::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--color-ink-soft);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  @media (min-width: 810px) {
+    .stat__box { flex-direction: row; justify-content: space-between; gap: 0; }
+  }
+
+  .stat__figure {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+  }
+  @media (min-width: 810px) {
+    .stat__figure { flex: 1; }
+  }
+
+  .stat__number {
+    display: flex;
+    margin: 0;
+    font-size: 48px;
+    line-height: 60px;
+    letter-spacing: -0.48px;
+    font-weight: 500;
+  }
+  .stat__label {
+    margin: 0;
+    font-size: 28px;
+    line-height: 24px;
+    letter-spacing: -0.28px;
+    color: var(--color-muted-dark);
+  }
+
+  .stat__text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 810px) {
+    .stat__text { width: 301px; font-size: 16px; line-height: 19.2px; }
+  }
+  @media (min-width: 1200px) {
+    .stat__text { width: 461px; font-size: 18px; line-height: 21.6px; }
+  }
+</style>
