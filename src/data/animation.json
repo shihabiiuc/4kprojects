@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "4K - Architectural Animation & Walkthroughs",
+    "description": "Creating pitch-winning visualisations for workplace design."
+  },
+  "hero": {
+    "title": "Animation",
+    "sources": [
+      {
+        "src": "/videos/animation-hero.webm",
+        "type": "video/webm; codecs=\"av01.0.08M.08\""
+      },
+      {
+        "src": "/videos/animation-hero.mp4",
+        "type": "video/mp4; codecs=\"avc1.640028\""
+      }
+    ],
+    "poster": "/images/animation/animation-hero-poster.webp",
+    "intro": [
+      "Animations have long been the go-to for taking designs to the next level, transforming concepts into unforgettable experiences that spark excitement and draw people in. More than just showing a space, they immerse your audience in its atmosphere, leaving a lasting impression that static visuals alone could never achieve.",
+      "Below you’ll find a highlights reel showcasing a selection of workplace animations we've produced for past projects. Drop us a message if you'd like to explore what a curated walkthrough could do for your next project."
+    ]
+  },
+  "reel": {
+    "sources": [
+      {
+        "src": "/videos/animation-reel.webm",
+        "type": "video/webm; codecs=\"av01.0.08M.08\""
+      },
+      {
+        "src": "/videos/animation-reel.mp4",
+        "type": "video/mp4; codecs=\"avc1.640028\""
+      }
+    ],
+    "poster": "/images/animation/animation-reel-poster.webp",
+    "label": "Workplace animation highlights reel"
+  },
+  "moreServices": {
+    "title": "More Services",
+    "cta": { "label": "View All Services", "href": "/#services" },
+    "items": [
+      {
+        "title": "Visualisation Portfolio",
+        "body": "A selection of workplace CGI examples and a short guide to pricing.",
+        "href": "/visualisation",
+        "image": "/images/animation/more-services-visualisation.webp",
+        "alt": "Dark office interior with a long dining table and 4K logos on the walls",
+        "w": 1440,
+        "h": 846
+      },
+      {
+        "title": "Other Services",
+        "body": "AI walkthroughs, alternate finish options, sketchy style images and more.",
+        "image": "/images/animation/more-services-other.webp",
+        "alt": "Watercolour sketch of an office lounge with a green sofa",
+        "w": 1431,
+        "h": 838
+      }
+    ]
+  },
+  "cta": {
+    "title": ["Ready to transform your vision?", "We’re here to help."],
+    "link": { "label": "GET IN TOUCH", "href": "/contact" }
+  }
+}

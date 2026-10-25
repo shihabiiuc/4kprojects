@@ -1,0 +1,137 @@
+---
+// src/components/PageMediaHero.astro
+interface Props {
+  title: string;
+  sources: { src: string; type: string }[];
+  poster?: string;
+  /** Paragraphs; a paragraph given as a list keeps a line break between items. */
+  intro: (string | string[])[];
+  /** Pin the intro to the top while the next section scrolls over it. */
+  sticky?: boolean;
+}
+
+import Words from './Words.astro';
+import Lines from './Lines.astro';
+
+const { title, sources, poster, intro, sticky = true } = Astro.props;
+---
+
+<!-- Full-height background video with the page title at the bottom, then a
+     black intro panel (rounded bottom) that can stick to the top while the
+     next section scrolls over it. The video starts loading straight away. -->
+<section class="media-hero" data-nav-lines="white">
+  <div class="media-hero__bg" aria-hidden="true">
+    <video
+      style={poster && `background-image: url(${poster})`}
+      loop
+      muted
+      playsinline
+      preload="none"
+      disablepictureinpicture
+      data-lazy-video="eager"
+    >
+      {sources.map((s) => <source data-src={s.src} type={s.type} />)}
+    </video>
+    <div class="media-hero__fade"></div>
+  </div>
+  <h1 class="media-hero__title" data-reveal="word" data-reveal-on="view"><Words text={title} /></h1>
+</section>
+
+<section class:list={['media-intro', sticky && 'media-intro--sticky']} data-nav-lines="white">
+  <div class="media-intro__copy">
+    {intro.map((para) => (
+      <p data-reveal="line" data-reveal-on="view" style="--reveal-start: 0.4s">
+        {[para].flat().map((line, i) => <>{i > 0 && <br />}<Lines text={line} /></>)}
+      </p>
+    ))}
+  </div>
+</section>
+
+<script>
+  import { initLazyVideos } from '../scripts/lazy-video';
+  initLazyVideos();
+</script>
+
+<style>
+  .media-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 60px;
+    height: 90vh;
+    padding: 30px var(--gutter) 50px;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+  }
+  @media (min-width: 810px) {
+    .media-hero { height: 100vh; padding-bottom: 80px; }
+  }
+
+  .media-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: #000;
+  }
+  .media-hero__bg video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+  }
+  /* Darkens the bottom of the video behind the title. */
+  .media-hero__fade {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    mask-image: linear-gradient(180deg, transparent 62%, #000 100%);
+  }
+
+  .media-hero__title {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: 46px;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .media-hero__title { font-size: 72px; }
+  }
+  @media (min-width: 1200px) {
+    .media-hero__title { font-size: 100px; }
+  }
+
+  .media-intro {
+    position: relative;
+    z-index: 1;
+    padding: 0 var(--gutter) 50px;
+    border-radius: 0 0 50px 50px;
+    background: #000;
+    color: #fff;
+  }
+  .media-intro--sticky { position: sticky; top: 0; }
+  @media (min-width: 810px) {
+    .media-intro { padding-bottom: 80px; }
+  }
+
+  .media-intro__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 810px) {
+    .media-intro__copy { font-size: 16px; line-height: 19.2px; }
+  }
+  @media (min-width: 1200px) {
+    .media-intro__copy { width: 50%; font-size: 18px; line-height: 21.6px; }
+  }
+  .media-intro__copy p { margin: 0; }
+</style>

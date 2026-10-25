@@ -1,0 +1,145 @@
+---
+// src/components/EmbedLauncher.astro
+interface Props {
+  image: { src: string; alt: string; w: number; h: number };
+  label: string;
+  /** Accessible name for the preview group. */
+  name: string;
+  embed: { src: string; title: string; aspect: number };
+}
+
+const { image, label, name, embed } = Astro.props;
+const dialogId = 'embed-dialog';
+---
+
+<!-- Full-width preview image with a play button. Clicking it opens a dialog
+     with the interactive stream; the stream only loads while it is open and
+     the arrow keys are passed through to it. -->
+<section class="embed" data-nav-lines="white">
+  <div class="embed__frame" role="group" aria-label={name}>
+    <img src={image.src} alt={image.alt} width={image.w} height={image.h} loading="eager" draggable="false" />
+    <button type="button" class="embed__open" aria-haspopup="dialog" aria-controls={dialogId} data-embed-open>
+      <span class="embed__play" aria-hidden="true">
+        <svg viewBox="0 0 28 28" fill="currentColor"><polygon points="11,8 21,14 11,20" /></svg>
+      </span>
+      <span class="embed__label">{label}</span>
+    </button>
+  </div>
+
+  <dialog id={dialogId} class="embed__dialog" tabindex="-1" aria-label={embed.title} data-embed-dialog data-lenis-prevent>
+    <div class="embed__window">
+      <iframe title={embed.title} data-src={embed.src} allowfullscreen style={`aspect-ratio: ${embed.aspect}`}></iframe>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  const KEYS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+  document.querySelectorAll<HTMLButtonElement>('[data-embed-open]').forEach((button) => {
+    const dialog = document.getElementById(button.getAttribute('aria-controls') ?? '');
+    const iframe = dialog?.querySelector<HTMLIFrameElement>('iframe[data-src]');
+    if (!(dialog instanceof HTMLDialogElement) || !iframe) return;
+    const origin = new URL(iframe.dataset.src!, location.href).origin;
+
+    button.addEventListener('click', () => {
+      iframe.src = iframe.dataset.src!;
+      dialog.showModal();
+      dialog.focus();
+    });
+    // A click outside the window lands on the dialog itself.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener('close', () => {
+      iframe.src = 'about:blank';
+    });
+    dialog.addEventListener('keydown', (e) => {
+      if (KEYS.includes(e.key)) iframe.contentWindow?.postMessage({ type: 'eagle3d-key', key: e.key }, origin);
+    });
+  });
+</script>
+
+<style>
+  .embed {
+    position: relative;
+    background: #000;
+  }
+
+  .embed__frame {
+    position: relative;
+    height: 640px;
+    overflow: hidden;
+  }
+  .embed__frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .embed__open {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding-top: 1px;
+    color: #fff;
+    cursor: pointer;
+  }
+  .embed__play {
+    display: grid;
+    place-items: center;
+    width: 61px;
+    height: 61px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .embed__play svg { width: 35px; height: 35px; }
+  .embed__label {
+    font-family: "DM Sans", sans-serif;
+    font-size: 24px;
+    line-height: 28.8px;
+  }
+
+  .embed__dialog {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: rgba(0, 0, 0, 0.8);
+  }
+  .embed__dialog::backdrop { background: transparent; }
+  :global(html:has(dialog[data-embed-dialog][open])) { overflow: hidden; }
+
+  .embed__window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 75%;
+    translate: -50% -50%;
+    overflow: clip;
+    border-radius: 16px;
+  }
+  /* White border drawn on top of the stream. */
+  .embed__window::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 4px solid #fff;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .embed__window iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    background: #000;
+  }
+</style>

@@ -6,17 +6,23 @@
 interface Props {
   href: string;
   label: string;
-  /** Grow from 16px to 20px from the tablet breakpoint up (footer CTA). */
-  large?: boolean;
+  /** 20px instead of 16px: from the tablet breakpoint up (footer CTA), or
+      at every size with 'always'. */
+  large?: boolean | 'always';
   newTab?: boolean;
+  /** Sit inline within a sentence. */
+  inline?: boolean;
+  /** 18px base size instead of 16px. */
+  medium?: boolean;
+  class?: string;
 }
 
-const { href, label, large = false, newTab = false } = Astro.props;
+const { href, label, large = false, newTab = false, inline = false, medium = false, class: extra } = Astro.props;
 ---
 
 <a
   href={href}
-  class:list={['underline-link', large && 'underline-link--large']}
+  class:list={['underline-link', large && 'underline-link--large', large === 'always' && 'underline-link--large-always', inline && 'underline-link--inline', medium && 'underline-link--medium', extra]}
   target={newTab ? '_blank' : undefined}
   rel={newTab ? 'noopener' : undefined}
 >
@@ -40,6 +46,9 @@ const { href, label, large = false, newTab = false } = Astro.props;
     white-space: pre;
     cursor: pointer;
   }
+  .underline-link--medium { font-size: 18px; line-height: 19.8px; }
+  .underline-link--inline { display: inline-flex; vertical-align: baseline; }
+  .underline-link--large-always { font-size: 20px; line-height: 22px; }
   @media (min-width: 810px) {
     .underline-link--large { font-size: 20px; line-height: 22px; }
   }

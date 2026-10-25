@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "4K - Same-Day Quotes",
+    "description": "Creating pitch-winning visualisations for workplace design."
+  },
+  "hero": {
+    "title": "Quote / Contact",
+    "lead": "Whether it’s a quote request or a general question we would love to hear from you and will endeavour to respond to you the same day."
+  },
+  "form": {
+    "action": "https://api.web3forms.com/submit",
+    "hidden": {
+      "access_key": "ea8170de-3698-479c-a798-70e39d9cab19",
+      "subject": "New enquiry from 4kprojects.com",
+      "from_name": "4K Projects website",
+      "redirect": "https://4kprojects.com/contact/"
+    },
+    "fields": [
+      { "name": "name", "placeholder": "Name", "required": true, "autocomplete": "name" },
+      { "name": "email", "placeholder": "Email", "type": "email", "required": true, "autocomplete": "email" },
+      { "name": "company", "placeholder": "Company Name", "required": true, "autocomplete": "organization" },
+      { "name": "project", "placeholder": "Project Name ( Optional )" },
+      { "name": "message", "placeholder": "Tell Us About Your Project!", "type": "textarea" }
+    ],
+    "labels": { "submit": "Submit", "success": "Thank you", "error": "Something went wrong" }
+  },
+  "methods": [
+    {
+      "title": "Same Day Quote",
+      "body": "Any quote request received before midday will be returned the same day with a full breakdown of costs and an estimation of timescale."
+    },
+    {
+      "title": "Start Next Day",
+      "body": "Our strength in depth has always been one of our proudest facets. No matter the size of the project, we guarantee we can start working on it tomorrow."
+    },
+    {
+      "title": "Quality vs price",
+      "body": "We encourage you to shop around for a CGI company who can offer a similar level of quality at our price point. Please review our ‘Pricing’ page for more detail."
+    }
+  ],
+  "links": [
+    { "label": "+44 20 3936 2228", "href": "tel:+442039362228" },
+    { "label": "info@4kprojects.com", "href": "mailto:info@4kprojects.com" }
+  ]
+}

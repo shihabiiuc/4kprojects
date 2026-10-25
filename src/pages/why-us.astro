@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+import AboutHero from '../components/AboutHero.astro';
+import WorkSlider from '../components/WorkSlider.astro';
+import StatLines from '../components/StatLines.astro';
+import Advantages from '../components/Advantages.astro';
+import InfoCards from '../components/InfoCards.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Footer from '../components/Footer.astro';
+
+import content from '../data/why-us.json';
+---
+
+<Layout title={content.meta.title} description={content.meta.description} page="fog">
+  <Header />
+  <main>
+    <!-- 1. STICKY INTRO -->
+    <AboutHero title={content.hero.title} lead={content.hero.lead} fit={content.hero.fit} />
+
+    <!-- 2. FULL-SCREEN WORK SLIDER (scrolls over the intro) -->
+    <WorkSlider slides={content.slides} />
+
+    <!-- 3. STAT LINES -->
+    <StatLines lines={content.stats} theme="page" small />
+
+    <!-- 4. OUTSOURCING, EASIER (pins on desktop so the cards slide over it) -->
+    <Advantages
+      title={content.advantages.title}
+      body={content.advantages.body}
+      items={content.advantages.items}
+      theme="page"
+      stickyLg={-1500}
+    />
+
+    <!-- 5. SHARING IS CARING -->
+    <InfoCards
+      title={content.sharing.title}
+      body={content.sharing.body}
+      cards={content.sharing.cards}
+      columns={2}
+      sticky={{ top: 0 }}
+      ruled
+    />
+
+    <!-- 6. TWO-WAY RELATIONSHIP -->
+    <InfoCards
+      title={content.relationship.title}
+      body={content.relationship.body}
+      cards={content.relationship.cards}
+      sticky={{ top: 150, from: 'tablet' }}
+      ruled
+    />
+
+    <!-- 7. TESTIMONIALS -->
+    <Testimonials title={content.testimonials.title} quotes={content.testimonials.quotes} />
+  </main>
+  <Footer />
+</Layout>

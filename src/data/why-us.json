@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "title": "4K - More Than Just Visualisation",
+    "description": "Creating pitch-winning visualisations for workplace design."
+  },
+  "hero": {
+    "title": "Why us?",
+    "lead": "The market is flooded with 3D studios promising quick turnarounds and competitive rates. Yet finding one that truly understands workplace design - and won't make your life harder in the process- can be surprisingly difficult. Here's what we feel sets us apart.",
+    "fit": { "size": 25.38, "leading": 1.2, "below": "tablet" }
+  },
+  "slides": [
+    { "image": "/images/why-us/auditorium.webp", "alt": "Auditorium with tiered dark seating" },
+    { "image": "/images/why-us/open-plan-office.webp", "alt": "Open-plan office with a blue rug" },
+    { "image": "/images/why-us/bright-office.webp", "alt": "Bright white office with a kitchen" }
+  ],
+  "stats": ["Consistently high quality", "Consistently available", "Consistently easy"],
+  "advantages": {
+    "title": "Outsourcing, easier",
+    "body": "The CGI outsourcing world is crowded, and picking the right partner isn’t always easy. We’ve always believed that consistently high quality should be a given. Which means the real question is…what other qualities truly make a studio worth working with?",
+    "items": [
+      {
+        "title": ["Work with a designer,", "not an artist"],
+        "body": "All our project managers are designers by trade, with a combined experience of 35+ years in workplace design. Have your project run by someone who knows their RCPs from their FF&Es."
+      },
+      {
+        "title": ["One person,", "one conversation,", "zero crossed wires"],
+        "body": "Some great feedback we’ve heard from multiple clients is how useful it is to have one person running each project, rather than multiple lines of communication with various 3D artists."
+      },
+      {
+        "title": ["Available to start", "tomorrow, always"],
+        "body": "We know how difficult it is when you’re faced with a tight deadline and your 3D options are all busy. Our availability is one of the cornerstones we’re most proud of, as it was the biggest challenge we used to face ourselves as workplace designers. Since 2016, our ever-growing network of 3D artists has meant we’ve never had to turn down a project due to lack of resource."
+      },
+      {
+        "title": ["No clue on deadline?", "No problem"],
+        "body": "Every client and every project are different. Want us to start work tomorrow and wrap up by the end of the week? We've got you. Want us to get started in 2 weeks and deliver finals in the summer? We're used to it. Want some images ready for a meeting next week and the rest to be put on hold? Sure thing – we work on your terms."
+      },
+      {
+        "title": ["Market leaders", "for price vs quality"],
+        "body": "Whilst some of our competitors offer similar quality imagery, we weren’t able to find any who could do so for the same price or turnaround time (ask for more details)."
+      },
+      {
+        "title": ["Replies measured", "in minutes, not days"],
+        "body": "When outsourcing any sort of work but particularly something as important as CGIs, good communication is probably the most important thing to look for in a supplier, and is why it’s been the cornerstone of our setup from day 1. Whether it’s via email, whatsapp, phone...we guarantee a prompt response (typically within an hour, in reality much quicker)."
+      },
+      {
+        "title": ["13 images in 5 days"],
+        "body": "Our PB, but we try not make a habit of it. Have a short deadline and want to know what’s possible? Challenge us, let us show you how much we can do in a tight timeframe."
+      },
+      {
+        "title": ["A decade of experience"],
+        "body": "Producing 70+ images every month and trusted by workplace designers for over a decade, you can rest assured you’re in safe hands."
+      },
+      {
+        "title": ["Reliability you can", "bet your project on."],
+        "body": "We value long term relationships over short term profits, and do all we can to ensure new clients join our list of dozens who come back to us time and again for high quality, low stress visualisations."
+      }
+    ]
+  },
+  "sharing": {
+    "title": "Sharing is caring",
+    "body": "When it comes to outsourced CGI production there are almost too many studios to choose from. Why choose us over any of our competitors? Great question...",
+    "cards": [
+      {
+        "icon": "wireframe",
+        "title": "Colour Masks",
+        "body": "When we deliver final images we always include colour masks. This allows clients to make any last minute tweaks in photoshop themselves quickly and efficiently, giving them total control over the final image rather than having to wait on us for any last minute tiny updates."
+      },
+      {
+        "icon": "image",
+        "title": "3DS Max files",
+        "body": "Clients occasionally request the 3DS Max model after a project—for safekeeping, creating a Revit file, or handing off to their in-house team. Whatever the reason, we never question it. We’re always happy to share the archive files free of charge, ensuring you have full access to your assets even after delivery. No fees, no friction—just open collaboration."
+      }
+    ]
+  },
+  "relationship": {
+    "title": "Two-Way Relationship",
+    "body": "We view every client relationship as a long term opportunity to provide stress free, high quality CGIs at a cost point that suits everyone. Flexibility is at the core of everything we do, including pricing – it’s crucial you have the final say.",
+    "cards": [
+      {
+        "icon": "wireframe",
+        "title": "Pay what you want",
+        "body": "Not sure about the value we offer? Try us with minimal risk. For your first project, we’ll quote as usual—then after delivery, if you’re not fully satisfied, you can pay what you feel is fair. No pressure. We trust the quality of our work will speak for itself.*"
+      },
+      {
+        "icon": "image",
+        "title": "Invoice override",
+        "body": "We’ve built long-term client relationships through trust and fair pricing—often skipping initial quotes to save time. More importantly, clients can adjust the final invoice if it feels too high or misaligned with the outcome. Full flexibility, minimal financial risk."
+      },
+      {
+        "icon": "gallery",
+        "title": "Pure value",
+        "body": "While we don’t match competitor quotes, our focus is on delivering real value. We believe in fair pricing built on quality, trust, and results—not a race to the bottom. Our rates reflect the care, time, and skill we bring to each project, ensuring you get work worth every penny."
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "From those who know us best",
+    "quotes": [
+      {
+        "text": "Our projects often require a very tight turnaround but the team at 4K do an incredible job in always meeting deadlines and do so whilst achieving an outstanding level of quality. Their hard work and efforts over the years have helped Thirdway win many new contracts, and I'm sure many more to come!",
+        "name": "Ryan Lubin"
+      },
+      {
+        "text": "The project managers at 4K provide a top class service. Not only do they manage all information but can facilitate extra overtime requested on a very short notice. Nothing is ever too much or too hard, they have a great work attitude and very friendly approach. It is a pleasure working with them.",
+        "name": "Lina Grinceviciute"
+      },
+      {
+        "text": "We have been working with 4K for our visualisations for a good few years now, apart from the amazing quality of work...it’s always just so simple and stress free! You just get it - couldn't praise you guys highly enough!",
+        "name": "Carl Johnson"
+      },
+      {
+        "text": "4K have a perfectly organised process, a friendly and practical attitude, deliver quickly and constantly wow us with their amazing CGIs. My team and our clients are always amazed when we receive them. You can really tell that there are designers within the team as they easily get our design intent with minimal input on our end. This saves us a lot of time and makes the whole process extremely enjoyable!",
+        "name": "Martina Pardo"
+      },
+      {
+        "text": "The team at 4K are always an absolute pleasure to deal with but what keeps us coming back is the outstanding quality of the final product. The care and attention to detail that is put into each and every project is incredible. They really listen to your requests, think about your audience and make it as easy as possible to utilise the outcome to it’s best potential. I would highly recommend 4K for any visualisation project.",
+        "name": "Rosie Hill"
+      }
+    ]
+  }
+}

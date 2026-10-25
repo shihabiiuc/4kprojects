@@ -1,0 +1,239 @@
+---
+// src/components/ProcessBars.astro
+interface Bar {
+  title: string;
+  body: string;
+}
+interface Segment {
+  value: string;
+  /** Lines of the label; below desktop they stack, on desktop they share a line. */
+  label: string[];
+}
+interface Props {
+  /** Unique prefix for the scroll-trigger ids. */
+  id: string;
+  title: string;
+  body: string;
+  /** Two bars side by side (the first 70% wide on desktop)… */
+  bars?: Bar[];
+  /** …or one bar split into percentage segments. */
+  segments?: Segment[];
+  /** Sticky offsets, so each panel leaves the previous heading showing. */
+  top: { md: number; lg: number };
+}
+
+import Words from './Words.astro';
+import Lines from './Lines.astro';
+
+const { id, title, body, bars = [], segments, top } = Astro.props;
+
+// Each bar fills with black from the left, then its text slides in. The
+// second bar waits for the first one to finish.
+const timing = [
+  { fillDelay: '0s', fillDuration: '1.5s', fillFrom: '-642px', textDelay: '0.5s' },
+  { fillDelay: '1.5s', fillDuration: '0.8s', fillFrom: '-290px', textDelay: '2s' },
+];
+const timingStyle = (i: number) => {
+  const t = timing[i];
+  return `--fill-delay: ${t.fillDelay}; --fill-duration: ${t.fillDuration}; --fill-from: ${t.fillFrom}; --text-delay: ${t.textDelay}`;
+};
+---
+
+<section class="process" style={`--top-md: ${top.md}px; --top-lg: ${top.lg}px`}>
+  <h2 class="process__title" data-reveal="word" data-reveal-on="view"><Words text={title} /></h2>
+  <p class="process__body" data-reveal="line" data-reveal-on="view" style="--reveal-start: 0.4s"><Lines text={body} /></p>
+
+  {segments ? (
+    <div id={`${id}-1`} class="fill-bar fill-bar--timeline" style={timingStyle(0)}>
+      <div class="fill-bar__fill" data-scroll-trigger data-trigger={`${id}-1`} data-threshold="0.9" data-once></div>
+      <div class="fill-bar__content timeline" data-scroll-trigger data-trigger={`${id}-1`} data-threshold="0.9" data-once>
+        {segments.map((seg) => (
+          <div class="timeline__segment">
+            <h3>{seg.value}</h3>
+            <p>{seg.label.map((line, i) => <>{i > 0 && <>{' '}<br /></>}{line}</>)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div class="process__bars">
+      {bars.map((bar, i) => (
+        <div id={`${id}-${i + 1}`} class="fill-bar" style={timingStyle(i)}>
+          <div class="fill-bar__fill" data-scroll-trigger data-trigger={`${id}-${i + 1}`} data-threshold="0.9" data-once></div>
+          <div class="fill-bar__content fill-bar__text" data-scroll-trigger data-trigger={`${id}-${i + 1}`} data-threshold="0.9" data-once>
+            <h3>{bar.title}</h3>
+            <p>{bar.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</section>
+
+<style>
+  .process {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px 20px;
+    background: var(--color-page);
+  }
+  @media (min-width: 810px) {
+    .process { top: var(--top-md); }
+  }
+  @media (min-width: 1200px) {
+    .process { top: var(--top-lg); gap: 0; padding: 30px 30px 60px; }
+    .process::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      border-top: 1px solid currentColor;
+      pointer-events: none;
+    }
+  }
+
+  .process__title {
+    margin: 0;
+    font-size: 46px;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .process__title { font-size: 56px; }
+  }
+  @media (min-width: 1200px) {
+    .process__title { font-size: 64px; }
+  }
+
+  .process__body {
+    margin: 0;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 1200px) {
+    .process__body { width: 50%; margin-top: 30px; padding-bottom: 80px; font-size: 20px; line-height: 24px; }
+  }
+
+  .process__bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  @media (min-width: 1200px) {
+    .process__bars { flex-direction: row; }
+    .process__bars .fill-bar:first-child { width: 70%; flex-shrink: 0; }
+    .process__bars .fill-bar:last-child { flex: 1; }
+  }
+
+  /* ── Fill bar ── */
+  .fill-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 10px 30px 10px 10px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 20px rgb(0 0 0 / 0.1);
+  }
+  .fill-bar__fill {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    transition:
+      opacity var(--fill-duration) var(--ease-slide) var(--fill-delay),
+      translate var(--fill-duration) var(--ease-slide) var(--fill-delay);
+  }
+  :global(.js) .fill-bar__fill:not([data-active]) { opacity: 0; translate: var(--fill-from) 0; }
+
+  .fill-bar__content {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    color: var(--color-page);
+    font-family: "DM Sans", sans-serif;
+    transition:
+      opacity 1s var(--ease-slide) var(--text-delay),
+      translate 1s var(--ease-slide) var(--text-delay);
+  }
+  :global(.js) .fill-bar__content:not([data-active]) { opacity: 0; translate: -400px 0; }
+
+  .fill-bar__text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px 0 5px 20px;
+  }
+  .fill-bar__text h3 {
+    margin: 0;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+  }
+  .fill-bar__text p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 1200px) {
+    .fill-bar__text h3 { font-size: 24px; line-height: 28.8px; }
+    .fill-bar__text p { font-size: 16px; line-height: 19.2px; }
+  }
+
+  /* ── Timeline ── */
+  .fill-bar--timeline { padding: 10px 8px 10px 10px; }
+  @media (min-width: 1200px) {
+    .fill-bar--timeline { padding: 10px; }
+  }
+
+  .timeline {
+    display: flex;
+    justify-content: space-between;
+    padding-block: 5px;
+  }
+  @media (min-width: 1200px) {
+    .timeline { justify-content: flex-start; gap: 30px; padding-left: 20px; }
+  }
+
+  .timeline__segment {
+    position: relative;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 5px;
+    padding-right: 10px;
+    border-right: 1px solid currentColor;
+  }
+  .timeline__segment:last-child { padding-right: 0; border-right: 0; }
+  @media (min-width: 810px) {
+    .timeline__segment { flex: 1; padding-inline: 10px; }
+    .timeline__segment:last-child { padding-right: 10px; }
+  }
+  @media (min-width: 1200px) {
+    .timeline__segment { padding: 0 20px 0 0; }
+    .timeline__segment:last-child { padding-right: 20px; border-right: 1px solid currentColor; }
+  }
+
+  .timeline__segment h3 {
+    margin: 0;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.2px;
+  }
+  .timeline__segment p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 14.4px;
+    white-space: pre;
+  }
+  @media (min-width: 1200px) {
+    .timeline__segment h3 { font-size: 24px; line-height: 28.8px; }
+    .timeline__segment p { font-size: 16px; line-height: 19.2px; }
+    .timeline__segment p br { display: none; }
+  }
+</style>

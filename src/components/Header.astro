@@ -4,14 +4,25 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about-us" },
   { name: "Visualisation", href: "/visualisation" },
-  { name: "Design Services", href: "/" },
-  { name: "Other Services", href: "/" },
-  { name: "How We Work", href: "/" },
-  { name: "Why Us", href: "/" },
-  { name: "Contact", href: "/" },
+  { name: "Animation", href: "/animation" },
+  { name: "Virtual Tours", href: "/virtual-tours" },
+  { name: "Unreal Engine", href: "/unreal-engine" },
+  { name: "How We Work", href: "/how-we-work" },
+  { name: "Why Us", href: "/why-us" },
+  { name: "Contact", href: "/contact" },
 ];
 
 import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  /** White logo for pages with a dark background. */
+  logo?: 'black' | 'white';
+}
+
+const { logo = 'black' } = Astro.props;
+const logoImg = logo === 'white'
+  ? { src: '/images/logos/4k-logo-white.webp', width: 122, height: 105 }
+  : { src: '/images/logos/4k-logo-black.png', width: 1765, height: 1523 };
 
 const currentPath = Astro.url.pathname;
 // The live site shows no logo on the home page.
@@ -26,10 +37,10 @@ const showLogo = currentPath !== "/";
   class="site-logo"
 >
   <img
-    src="/images/logos/4k-logo-black.png"
+    src={logoImg.src}
     alt="4K Projects Logo"
-    width="1765"
-    height="1523"
+    width={logoImg.width}
+    height={logoImg.height}
     loading="eager"
     decoding="async"
   />

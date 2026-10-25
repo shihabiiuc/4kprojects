@@ -6,14 +6,19 @@ import Lines from './Lines.astro';
 interface Props {
   title: string;
   lead: string;
+  /** Size the title to fill the width on smaller screens, with the hero
+      50vh tall: font size in cqw (the live site's measured ratio), line
+      height, and below which breakpoint it applies (default desktop). */
+  fit?: { size: number; leading?: number; /** 'tablet' or 'desktop' */ below?: string };
 }
 
-const { title, lead } = Astro.props;
+const { title, lead, fit } = Astro.props;
+const fitStyle = fit && `--fit-size: ${fit.size}cqw; --fit-leading: ${fit.leading ?? 1}`;
 ---
 
 <!-- Sticky intro — the work slider scrolls up over it. -->
-<section class="about-hero">
-  <h1 class="about-hero__title" data-reveal="word" data-reveal-on="mount"><Words text={title} /></h1>
+<section class:list={['about-hero', fit && `about-hero--fit-${fit.below ?? 'desktop'}`]} style={fitStyle}>
+  <h1 class="about-hero__title"><span class="about-hero__fit"><span data-reveal="word" data-reveal-on="mount"><Words text={title} /></span></span></h1>
   <p class="about-hero__lead" data-reveal="line" data-reveal-on="mount" style="--reveal-start: 0.4s">
     <Lines text={lead} />
   </p>
@@ -47,6 +52,17 @@ const { title, lead } = Astro.props;
   }
   @media (min-width: 1200px) {
     .about-hero__title { font-size: 150px; }
+  }
+
+  .about-hero__fit { display: block; container-type: inline-size; }
+  .about-hero__fit > span { display: block; }
+  @media (max-width: 1199px) {
+    .about-hero--fit-desktop { height: 50vh; justify-content: flex-end; }
+    .about-hero--fit-desktop .about-hero__fit > span { font-size: var(--fit-size); line-height: var(--fit-leading); white-space: pre; }
+  }
+  @media (max-width: 809px) {
+    .about-hero--fit-tablet { height: 50vh; justify-content: flex-end; }
+    .about-hero--fit-tablet .about-hero__fit > span { font-size: var(--fit-size); line-height: var(--fit-leading); white-space: pre; }
   }
 
   .about-hero__lead {

@@ -1,0 +1,55 @@
+---
+// src/components/PageCta.astro
+interface Props {
+  title: string[];
+  link: { label: string; href: string };
+}
+
+import Words from './Words.astro';
+import UnderlineLink from './UnderlineLink.astro';
+
+const { title, link } = Astro.props;
+---
+
+<!-- Closing call to action above the footer. -->
+<section class="page-cta" data-nav-lines="white">
+  <h2 class="page-cta__title" data-reveal="word" data-reveal-on="view">
+    {title.map((line, i) => <>{i > 0 && <br />}<Words text={line} /></>)}
+  </h2>
+  <UnderlineLink href={link.href} label={link.label} large="always" />
+</section>
+
+<style>
+  .page-cta {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px var(--gutter);
+    background: #000;
+    color: #fff;
+  }
+  @media (min-width: 810px) {
+    .page-cta {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 0;
+      padding-top: 60px;
+      padding-bottom: 90px;
+    }
+  }
+
+  .page-cta__title {
+    margin: 0;
+    font-size: 46px;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .page-cta__title { font-size: 56px; }
+  }
+  @media (min-width: 1200px) {
+    .page-cta__title { font-size: 64px; white-space: pre; }
+  }
+</style>

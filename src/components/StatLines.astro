@@ -2,15 +2,19 @@
 // src/components/StatLines.astro
 interface Props {
   lines: string[];
+  /** Background: beige (home), the page colour, or black with page-colour text. */
+  theme?: 'beige' | 'page' | 'ink';
+  /** Smaller lines with a thicker underline (inner pages). */
+  small?: boolean;
 }
 
-const { lines } = Astro.props;
+const { lines, theme = 'beige', small = false } = Astro.props;
 ---
 
 <!-- Three large underlined statements, centred. Used twice on the home page.
      Each line fades in once it passes the middle of the screen, and fades
      out again when scrolled back below it. -->
-<section class="stat-lines" data-nav-lines="ink">
+<section class:list={['stat-lines', `stat-lines--${theme}`, small && 'stat-lines--small']} data-nav-lines={theme === 'ink' ? undefined : 'ink'}>
   {lines.map((line) => (
     <p class="stat-lines__item trigger-fade" data-scroll-trigger>{line}</p>
   ))}
@@ -35,6 +39,8 @@ const { lines } = Astro.props;
   @media (min-width: 1200px) {
     .stat-lines { padding-block: 150px; }
   }
+  .stat-lines--page { background: var(--color-page); }
+  .stat-lines--ink { background: #000; color: var(--color-page); }
 
   .stat-lines__item {
     margin: 0;
@@ -51,5 +57,19 @@ const { lines } = Astro.props;
   }
   @media (min-width: 1200px) {
     .stat-lines__item { font-size: 78px; }
+  }
+
+  .stat-lines--small .stat-lines__item {
+    width: 100%;
+    font-size: 24px;
+    white-space: pre;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 9px;
+  }
+  @media (min-width: 810px) {
+    .stat-lines--small .stat-lines__item { font-size: 48px; text-underline-offset: 16px; }
+  }
+  @media (min-width: 1200px) {
+    .stat-lines--small .stat-lines__item { font-size: 78px; }
   }
 </style>

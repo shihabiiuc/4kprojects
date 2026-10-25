@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+import ContactHero from '../components/ContactHero.astro';
+import ContactDetails from '../components/ContactDetails.astro';
+import Footer from '../components/Footer.astro';
+
+import content from '../data/contact.json';
+---
+
+<Layout title={content.meta.title} description={content.meta.description} page="dove">
+  <Header />
+  <main>
+    <!-- 1. TITLE + INTRO -->
+    <ContactHero title={content.hero.title} lead={content.hero.lead} />
+
+    <!-- 2. FORM, SELLING POINTS, PHONE / EMAIL -->
+    <ContactDetails form={content.form} methods={content.methods} links={content.links} />
+  </main>
+  <Footer />
+</Layout>

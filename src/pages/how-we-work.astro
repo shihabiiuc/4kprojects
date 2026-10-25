@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+import AboutHero from '../components/AboutHero.astro';
+import WorkSlider from '../components/WorkSlider.astro';
+import StatLines from '../components/StatLines.astro';
+import ResourceRatings from '../components/ResourceRatings.astro';
+import ProcessBars from '../components/ProcessBars.astro';
+import InfoCards from '../components/InfoCards.astro';
+import Advantages from '../components/Advantages.astro';
+import Footer from '../components/Footer.astro';
+
+import content from '../data/how-we-work.json';
+---
+
+<Layout title={content.meta.title} description={content.meta.description} page="rose">
+  <Header />
+  <main>
+    <!-- 1. STICKY INTRO -->
+    <AboutHero title={content.hero.title} lead={content.hero.lead} fit={content.hero.fit} />
+
+    <!-- 2. FULL-SCREEN WORK SLIDER (scrolls over the intro) -->
+    <WorkSlider slides={content.slides} />
+
+    <!-- 3. STAT LINES -->
+    <StatLines lines={content.statsTop} theme="page" small />
+
+    <!-- 4–7. PROCESS PANELS — one wrapper, so these pin until the black
+         lines below arrive: each slides over the one before, leaving its
+         heading showing. -->
+    <div>
+      <ResourceRatings
+        title={content.resources.title}
+        body={content.resources.body}
+        items={content.resources.items}
+      />
+      <ProcessBars
+        id="revisions-bar"
+        title={content.revisions.title}
+        body={content.revisions.body}
+        bars={content.revisions.bars}
+        top={{ md: 100, lg: 140 }}
+      />
+      <ProcessBars
+        id="timeline-bar"
+        title={content.timeline.title}
+        body={content.timeline.body}
+        segments={content.timeline.segments}
+        top={{ md: 220, lg: 260 }}
+      />
+      <InfoCards
+        title={content.reviewing.title}
+        body={content.reviewing.body}
+        cards={content.reviewing.cards}
+      />
+    </div>
+
+    <!-- 8. STAT LINES (black) -->
+    <StatLines lines={content.statsBottom} theme="ink" small />
+
+    <!-- 9. FEEDBACK & COMMENTS -->
+    <Advantages
+      title={content.feedback.title}
+      body={content.feedback.body}
+      link={content.feedback.link}
+      items={content.feedback.items}
+    />
+  </main>
+  <Footer />
+</Layout>

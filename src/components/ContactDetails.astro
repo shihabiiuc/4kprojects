@@ -1,0 +1,347 @@
+---
+// src/components/ContactDetails.astro
+interface Field {
+  name: string;
+  placeholder: string;
+  /** An input type, or 'textarea'. */
+  type?: string;
+  required?: boolean;
+  autocomplete?: string;
+}
+interface Props {
+  form: {
+    action: string;
+    /** Hidden fields sent with every submission (Web3Forms key, subject…). */
+    hidden: Record<string, string>;
+    fields: Field[];
+    labels: { submit: string; success: string; error: string };
+  };
+  methods: { title: string; body: string }[];
+  links: { label: string; href: string }[];
+}
+
+import Words from './Words.astro';
+import Lines from './Lines.astro';
+import UnderlineLink from './UnderlineLink.astro';
+
+const { form, methods, links } = Astro.props;
+const ARROW = 'M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm29.66-93.66a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32L140.69,128,106.34,93.66a8,8,0,0,1,11.32-11.32Z';
+---
+
+<!-- Enquiry form on the left, three selling points on the right, then the
+     phone number and email. The form and links rise/slide in once the page
+     has loaded; on phones the 2nd and 3rd points slide in as they scroll in. -->
+<section class="contact">
+  <div class="contact__main">
+    <form class="contact-form" action={form.action} method="POST" data-contact-form>
+      {Object.entries(form.hidden).map(([name, value]) => <input type="hidden" name={name} value={value} />)}
+      <!-- Spam traps: real visitors never fill these in. -->
+      <input type="checkbox" name="botcheck" class="contact-form__trap" tabindex="-1" autocomplete="off" />
+      <div class="contact-form__offscreen" aria-hidden="true">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      {form.fields.map((f) =>
+        f.type === 'textarea' ? (
+          <textarea class="contact-form__field contact-form__field--message" name={f.name} placeholder={f.placeholder} aria-label={f.placeholder} required={f.required}></textarea>
+        ) : (
+          <input
+            class="contact-form__field"
+            type={f.type ?? 'text'}
+            name={f.name}
+            placeholder={f.placeholder}
+            aria-label={f.placeholder}
+            required={f.required}
+            autocomplete={f.autocomplete ?? 'off'}
+          />
+        )
+      )}
+
+      <button
+        class="contact-submit"
+        type="submit"
+        data-contact-submit
+        data-state="idle"
+        data-submit={form.labels.submit}
+        data-success={form.labels.success}
+        data-error={form.labels.error}
+      >
+        <span class="contact-submit__label" aria-live="polite" data-contact-label>{form.labels.submit}</span>
+        <span class="contact-submit__spinner" aria-hidden="true"></span>
+      </button>
+    </form>
+
+    <div class="contact__methods">
+      {methods.map((m, i) => (
+        <div class="contact-method" data-scroll-trigger={i > 0 ? '' : undefined} data-threshold={i > 0 ? '1' : undefined} data-once={i > 0 ? '' : undefined}>
+          <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d={ARROW} /></svg>
+          <h2 data-reveal="word" data-reveal-on="view"><Words text={m.title} /></h2>
+          <p data-reveal="line" data-reveal-on="view" style="--reveal-start: 0.4s"><Lines text={m.body} /></p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="contact__links">
+    {links.map((l, i) => (
+      <UnderlineLink href={l.href} label={l.label} medium large class={`contact__link contact__link--${i + 1}`} />
+    ))}
+  </div>
+</section>
+
+<script>
+  // Submit through fetch so the visitor stays on the page; the button shows
+  // the result. Bots that fill the trap field, or submit within 3s of the
+  // page loading, get a fake success.
+  const pageStart = performance.now();
+
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const button = form.querySelector<HTMLButtonElement>('[data-contact-submit]');
+    const label = button?.querySelector<HTMLElement>('[data-contact-label]');
+    if (!button || !label) return;
+
+    type State = 'idle' | 'loading' | 'success' | 'error';
+    const text: Record<State, string> = {
+      idle: button.dataset.submit ?? '',
+      loading: button.dataset.submit ?? '',
+      success: button.dataset.success ?? '',
+      error: button.dataset.error ?? '',
+    };
+    const setState = (state: State) => {
+      button.dataset.state = state;
+      label.textContent = text[state];
+      button.disabled = state === 'loading' || state === 'success';
+      button.toggleAttribute('aria-busy', state === 'loading');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      if (data.get('website') || performance.now() - pageStart < 3000) {
+        form.reset();
+        setState('success');
+        return;
+      }
+      data.delete('website');
+      data.delete('redirect');
+      setState('loading');
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(Object.fromEntries(data)),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.message);
+        form.reset();
+        setState('success');
+      } catch {
+        setState('error');
+      }
+    });
+  });
+</script>
+
+<style>
+  .contact {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding: 0 var(--gutter) 50px;
+    background: var(--color-page);
+  }
+  @media (min-width: 810px) {
+    .contact { gap: 40px; padding-bottom: 30px; }
+  }
+  @media (min-width: 1200px) {
+    .contact { padding-bottom: 100px; }
+  }
+
+  .contact__main {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+  @media (min-width: 810px) {
+    .contact__main { gap: 0; }
+  }
+  @media (min-width: 1200px) {
+    .contact__main { flex-direction: row; align-items: flex-start; gap: 20px; }
+  }
+
+  /* ── Form ── */
+  .contact-form {
+    position: relative;
+    display: grid;
+    gap: 20px 10px;
+    padding-top: 20px;
+    transition: opacity 1s var(--ease-reveal) 0.6s, translate 1s var(--ease-reveal) 0.6s;
+  }
+  :global(html.js:not([data-loaded])) .contact-form { opacity: 0.001; translate: 0 120px; }
+  @media (min-width: 810px) {
+    .contact-form { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1200px) {
+    .contact-form { width: 47%; flex-shrink: 0; }
+  }
+
+  .contact-form__trap { display: none; }
+  .contact-form__offscreen {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-form__field {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #000;
+    border-radius: 10px;
+    background: transparent;
+    color: #000;
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px;
+    line-height: 19.2px;
+  }
+  .contact-form__field::placeholder { color: var(--color-muted-dark); }
+  .contact-form__field:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+  .contact-form__field--message {
+    min-height: 150px;
+    padding-block: 12px;
+    resize: vertical;
+  }
+  @media (min-width: 810px) {
+    .contact-form__field--message { grid-column: span 2; }
+  }
+
+  /* ── Submit ── */
+  .contact-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 29%;
+    height: 40px;
+    border-radius: 10px;
+    background: #000;
+    color: #fff;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 200ms var(--ease-slide), color 200ms var(--ease-slide);
+  }
+  @media (min-width: 810px) {
+    .contact-submit { grid-column: span 2; width: 20%; }
+  }
+  @media (min-width: 1200px) {
+    .contact-submit { font-size: 16px; }
+  }
+  .contact-submit:hover { background: #fff; color: #000; }
+  .contact-submit:active { background: var(--color-ink-soft); color: #fff; }
+  .contact-submit:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+  .contact-submit:disabled { cursor: default; }
+  .contact-submit[data-state="error"] { color: var(--color-error); }
+  .contact-submit[data-state="loading"],
+  .contact-submit[data-state="success"] { background: #000; color: #fff; }
+
+  .contact-submit__spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 7.2deg, #fff 342deg);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+    animation: contact-spin 1s linear infinite;
+  }
+  .contact-submit[data-state="loading"] .contact-submit__label { display: none; }
+  .contact-submit[data-state="loading"] .contact-submit__spinner { display: block; }
+  @keyframes contact-spin { to { rotate: 360deg; } }
+  @media (prefers-reduced-motion: reduce) {
+    .contact-submit__spinner { animation: none; }
+  }
+
+  /* ── Selling points ── */
+  .contact__methods {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-block: 5px;
+  }
+  @media (max-width: 809px) {
+    .contact__methods { overflow-x: clip; }
+  }
+  @media (min-width: 810px) {
+    .contact__methods { padding: 80px 0 0 20px; }
+  }
+  @media (min-width: 1200px) {
+    .contact__methods { flex: 1; padding: 20px; }
+  }
+
+  .contact-method {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    column-gap: 10px;
+    transition: opacity 800ms var(--ease-reveal), translate 800ms var(--ease-reveal);
+  }
+  @media (max-width: 809px) {
+    :global(.js) .contact-method[data-scroll-trigger]:not([data-active]) { opacity: 0; translate: 150px 0; }
+  }
+  @media (min-width: 810px) {
+    .contact-method { column-gap: 20px; }
+  }
+
+  .contact-method svg { width: 34px; height: 34px; scale: 1.2308; }
+  .contact-method h2 {
+    align-self: center;
+    margin: 0;
+    font-size: 24px;
+    line-height: 1;
+  }
+  .contact-method p {
+    grid-column: span 2;
+    margin: 50px 0 0;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (max-width: 809px) {
+    .contact-method p { margin-right: -4px; }
+  }
+  @media (min-width: 810px) {
+    .contact-method svg { grid-row: span 2; }
+    .contact-method h2 { align-self: start; }
+    .contact-method p { grid-column: 2; margin-top: 10px; }
+  }
+  @media (min-width: 810px) and (max-width: 1199px) {
+    .contact-method p { width: 65%; }
+  }
+  @media (min-width: 1200px) {
+    .contact-method p { font-size: 16px; line-height: 19.2px; }
+  }
+
+  /* ── Phone / email ── */
+  .contact__links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  @media (min-width: 810px) {
+    .contact__links { align-items: flex-end; }
+  }
+  .contact__link {
+    --slide: 80px;
+    transition: opacity 1s var(--ease-reveal) 0.8s, translate 1s var(--ease-reveal) 0.8s;
+  }
+  .contact__link--2 {
+    --slide: 120px;
+    transition-delay: 1s;
+  }
+  :global(html.js:not([data-loaded])) .contact__link { opacity: 0.001; translate: calc(-1 * var(--slide)) 0; }
+  @media (min-width: 810px) {
+    :global(html.js:not([data-loaded])) .contact__link { translate: var(--slide) 0; }
+  }
+</style>

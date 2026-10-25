@@ -1,0 +1,230 @@
+---
+// src/components/Testimonials.astro
+interface Props {
+  title: string;
+  quotes: { text: string; name: string }[];
+}
+
+import Words from './Words.astro';
+
+const { title, quotes } = Astro.props;
+const ARROW = 'M 10.671 0.004 C 10.45 0.023 10.241 0.112 10.073 0.257 L 0.383 8.638 C 0.088 8.88 -0.052 9.264 0.018 9.639 C 0.087 10.014 0.355 10.321 0.717 10.442 C 1.079 10.562 1.477 10.477 1.758 10.218 L 10.761 2.434 L 19.764 10.218 C 20.044 10.477 20.443 10.562 20.805 10.442 C 21.167 10.321 21.435 10.014 21.504 9.639 C 21.573 9.264 21.433 8.88 21.139 8.638 L 11.448 0.257 C 11.234 0.071 10.953 -0.02 10.671 0.004 Z';
+---
+
+<!-- Quotes that cross-fade in place. Advances every 6s while on screen
+     (paused on hover/focus); the arrows step back and forth without wrapping. -->
+<section class="testimonials" aria-roledescription="carousel" aria-label="Testimonials" data-testimonials>
+  <h2 class="testimonials__title" data-reveal="word" data-reveal-on="view"><Words text={title} /></h2>
+
+  <div class="testimonials__body">
+    <div class="testimonials__nav">
+      {(['prev', 'next'] as const).map((dir) => (
+        <button
+          type="button"
+          class:list={['testimonials__button', dir === 'prev' && 'testimonials__button--prev']}
+          aria-label={dir === 'prev' ? 'Previous testimonial' : 'Next testimonial'}
+          aria-disabled={dir === 'prev' ? 'true' : undefined}
+          data-testimonials-button={dir}
+        >
+          <svg viewBox="0 0 12 22" aria-hidden="true">
+            <path d={ARROW} transform="translate(-4.761 5.75) rotate(90 10.75 5.25)" fill="currentColor" />
+          </svg>
+        </button>
+      ))}
+    </div>
+
+    {quotes.map((q, i) => (
+      <figure
+        class="testimonial"
+        aria-roledescription="slide"
+        aria-label={`${i + 1} of ${quotes.length}`}
+        inert={i > 0}
+        data-current={i === 0 ? '' : undefined}
+        data-testimonial
+      >
+        <blockquote data-reveal="word" data-reveal-on="view"><Words text={`“${q.text}”`} /></blockquote>
+        <figcaption><span data-reveal="word" data-reveal-on="view"><Words text={q.name} /></span></figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+
+<script>
+  const AUTOPLAY_MS = 6000;
+
+  function initTestimonials(root: HTMLElement) {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-testimonial]')];
+    const prev = root.querySelector<HTMLButtonElement>('[data-testimonials-button="prev"]');
+    const next = root.querySelector<HTMLButtonElement>('[data-testimonials-button="next"]');
+    if (slides.length < 2 || !prev || !next) return;
+
+    let index = 0;
+    let timer: number | undefined;
+    let visible = false;
+    let paused = false;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+    const stop = () => window.clearTimeout(timer);
+    const schedule = () => {
+      stop();
+      if (!visible || paused || document.hidden || reducedMotion.matches) return;
+      timer = window.setTimeout(() => show((index + 1) % slides.length), AUTOPLAY_MS);
+    };
+    const setDisabled = (button: HTMLButtonElement, disabled: boolean) => {
+      if (disabled) button.setAttribute('aria-disabled', 'true');
+      else button.removeAttribute('aria-disabled');
+    };
+
+    function show(i: number) {
+      index = i;
+      slides.forEach((slide, n) => {
+        slide.toggleAttribute('data-current', n === index);
+        slide.inert = n !== index;
+      });
+      setDisabled(prev!, index === 0);
+      setDisabled(next!, index === slides.length - 1);
+      schedule();
+    }
+
+    prev.addEventListener('click', () => index > 0 && show(index - 1));
+    next.addEventListener('click', () => index < slides.length - 1 && show(index + 1));
+
+    const pause = (on: boolean) => {
+      paused = on;
+      schedule();
+    };
+    root.addEventListener('pointerenter', () => pause(true));
+    root.addEventListener('pointerleave', () => pause(false));
+    root.addEventListener('focusin', () => pause(true));
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node)) pause(false);
+    });
+
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      schedule();
+    }).observe(root);
+    document.addEventListener('visibilitychange', schedule);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-testimonials]').forEach(initTestimonials);
+</script>
+
+<style>
+  .testimonials {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 94px;
+    height: 813px;
+    overflow: hidden;
+    padding: 40px 20px;
+    border-top: 1px solid #000;
+    background: var(--color-page);
+  }
+  @media (min-width: 810px) {
+    .testimonials { gap: 100px; height: 800px; padding: 100px 30px; }
+  }
+
+  .testimonials__title {
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 40px;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .testimonials__title { font-size: 48px; }
+  }
+  @media (min-width: 1200px) {
+    .testimonials__title { font-size: 64px; }
+  }
+
+  .testimonials__body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  @media (min-width: 810px) {
+    .testimonials__body { flex-direction: row; align-items: center; }
+  }
+
+  .testimonials__nav {
+    display: flex;
+    gap: 20px;
+  }
+  @media (min-width: 810px) {
+    .testimonials__nav { width: 20%; }
+  }
+
+  .testimonials__button {
+    position: relative;
+    flex: none;
+    width: 45px;
+    height: 45px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    color: #000;
+    cursor: pointer;
+    transition: opacity 800ms var(--ease-reveal);
+  }
+  .testimonials__button--prev { rotate: 180deg; }
+  .testimonials__button[aria-disabled="true"] { cursor: default; opacity: 0.25; }
+  .testimonials__button svg {
+    position: absolute;
+    top: calc(51.5% - 11px);
+    left: calc(51.04% - 6px);
+    width: 12px;
+    height: 22px;
+  }
+  @media (min-width: 810px) {
+    .testimonials__button { width: 54px; height: 54px; }
+    .testimonials__button svg { top: calc(50% - 11px); left: calc(52.17% - 6px); }
+  }
+
+  .testimonial {
+    position: absolute;
+    inset: 80px 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    margin: 0;
+    transition: opacity 800ms var(--ease-reveal);
+  }
+  .testimonial:not([data-current]) { opacity: 0; }
+  @media (min-width: 810px) {
+    .testimonial { top: 82px; left: 10px; gap: 150px; }
+  }
+  @media (min-width: 1200px) {
+    .testimonial { top: 0; right: 64px; left: auto; width: 849px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .testimonial { transition: none; }
+  }
+
+  .testimonial blockquote {
+    margin: 0;
+    font-family: "Source Serif 4 Regular", serif;
+    font-size: 24px;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .testimonial blockquote { font-size: 30px; }
+  }
+  @media (min-width: 1200px) {
+    .testimonial blockquote { font-size: 32px; }
+  }
+
+  .testimonial figcaption {
+    font-family: "DM Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .testimonial figcaption { font-size: 24px; }
+  }
+  @media (min-width: 1200px) {
+    .testimonial figcaption { font-size: 28px; }
+  }
+</style>

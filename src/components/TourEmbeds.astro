@@ -1,0 +1,48 @@
+---
+// src/components/TourEmbeds.astro
+interface Tour {
+  src: string;
+  title: string;
+}
+interface Props {
+  tours: Tour[];
+}
+
+const { tours } = Astro.props;
+---
+
+<!-- Full-width 360° tour embeds (Kuula), stacked with a gap between them.
+     Each iframe only loads when it nears the viewport. -->
+{tours.map((tour, i) => (
+  <section class="tour" data-nav-lines="white">
+    <div class="tour__frame" role="group" aria-label={`Virtual tour ${i + 1}`}>
+      <iframe
+        src={tour.src}
+        title={tour.title}
+        allow="xr-spatial-tracking; gyroscope; accelerometer"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+  </section>
+))}
+
+<style>
+  .tour {
+    position: relative;
+    background: #000;
+  }
+  .tour + .tour { padding-top: 150px; }
+
+  .tour__frame {
+    position: relative;
+    height: 640px;
+    overflow: hidden;
+  }
+  .tour__frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

@@ -1,0 +1,161 @@
+---
+// src/components/InfoCards.astro
+interface Card {
+  /** wireframe, image or gallery */
+  icon: string;
+  title: string;
+  body: string;
+}
+interface Props {
+  title: string;
+  body: string;
+  cards: Card[];
+  /** Three across from desktop (default), or two across from tablet. */
+  columns?: 2 | 3;
+  /** Stick at this top offset, from phones up or only from tablet up. */
+  sticky?: { top: number; from?: 'phone' | 'tablet' };
+  /** Draw the top rule at every size, not just on desktop. */
+  ruled?: boolean;
+}
+
+import Words from './Words.astro';
+import Lines from './Lines.astro';
+
+const { title, body, cards, columns = 3, sticky, ruled = false } = Astro.props;
+const ICONS: Record<string, string> = {
+  wireframe: 'M216,48H40A16,16,0,0,0,24,64V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V64A16,16,0,0,0,216,48ZM40,64H216v56H136a8,8,0,0,0-8,8v64H40ZM216,192H144V136h72v56Z',
+  image: 'M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM48,48H208v77.38l-24.69-24.7a16,16,0,0,0-22.62,0L53.37,208H48ZM208,208H76l96-96,36,36v60ZM96,120A24,24,0,1,0,72,96,24,24,0,0,0,96,120Zm0-32a8,8,0,1,1-8,8A8,8,0,0,1,96,88Z',
+  gallery: 'M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,172l52-52,80,80H40Zm176,28H194.63l-36-36,20-20L216,181.38V200ZM144,100a12,12,0,1,1,12,12A12,12,0,0,1,144,100Z',
+};
+---
+
+<!-- Heading and intro over a row of outlined cards (three across on desktop). -->
+<section
+  class:list={[
+    'info',
+    `info--cols-${columns}`,
+    sticky && `info--sticky-${sticky.from ?? 'phone'}`,
+    ruled && 'info--ruled',
+  ]}
+  style={sticky && `--sticky-top: ${sticky.top}px`}
+>
+  <h2 class="info__title" data-reveal="word" data-reveal-on="view"><Words text={title} /></h2>
+  <p class="info__body" data-reveal="line" data-reveal-on="view" style="--reveal-start: 0.4s"><Lines text={body} /></p>
+
+  <ul class="info__cards">
+    {cards.map((card) => (
+      <li class="info-card">
+        <div class="info-card__head">
+          <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d={ICONS[card.icon]} /></svg>
+          <h3>{card.title}</h3>
+        </div>
+        <p>{card.body}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .info {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 40px 20px;
+    background: var(--color-page);
+  }
+  @media (min-width: 1200px) {
+    .info { gap: 0; padding: 30px; border-top: 1px solid #000; }
+  }
+  .info--ruled { border-top: 1px solid #000; }
+  .info--sticky-phone { position: sticky; top: var(--sticky-top); }
+  @media (min-width: 810px) {
+    .info--sticky-tablet { position: sticky; top: var(--sticky-top); }
+  }
+
+  .info__title {
+    margin: 0;
+    font-size: 46px;
+    line-height: 1;
+  }
+  @media (min-width: 810px) {
+    .info__title { font-size: 56px; }
+  }
+  @media (min-width: 1200px) {
+    .info__title { font-size: 64px; }
+  }
+
+  .info__body {
+    margin: 0;
+    padding-bottom: 20px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 810px) {
+    .info__body { font-size: 16px; line-height: 19.2px; }
+  }
+  @media (min-width: 1200px) {
+    .info__body { width: 50%; margin-top: 30px; padding-bottom: 80px; font-size: 20px; line-height: 24px; }
+  }
+
+  .info__cards {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+    padding: 0 0 30px;
+    list-style: none;
+  }
+  @media (min-width: 810px) {
+    .info--cols-2 .info__cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1200px) {
+    .info--cols-3 .info__cards { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .info-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 213px;
+    padding: 20px;
+    border: 1px solid #000;
+    border-radius: 30px;
+    font-family: "DM Sans", sans-serif;
+  }
+  @media (min-width: 1200px) {
+    .info-card { min-height: 280px; }
+  }
+  .info--cols-2 .info-card { min-height: 280px; }
+  @media (min-width: 810px) and (max-width: 1199px) {
+    .info--cols-2 .info-card { min-height: 341px; }
+  }
+
+  .info-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .info-card__head svg { width: 34px; height: 34px; }
+  .info-card h3 {
+    margin: 0;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21.6px;
+  }
+  .info-card p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 16.8px;
+  }
+  @media (min-width: 810px) {
+    .info-card h3 { font-size: 20px; line-height: 24px; }
+  }
+  @media (min-width: 1200px) {
+    .info-card h3 { font-size: 24px; line-height: 28.8px; }
+    .info-card p { font-size: 16px; line-height: 19.2px; }
+  }
+</style>

@@ -559,6 +559,10 @@
   --color-shade: #191919;
   --color-sand: #dbdcd0;
   --color-mist: #dad8d9;
+  --color-rose: #dfcecf;
+  --color-fog: #dfe5e8;
+  --color-dove: #dbd9dc;
+  --color-error: #cc2929;
   --color-ink-soft: #222;
   --color-muted-dark: #00000080;
   --gutter: 20px;
@@ -578,11 +582,15 @@
   :root { --gutter: 30px; }
 }
 
-/* Page colour: <body data-page="sand|beige|mist"> sets the background
+/* Page colour: <body data-page="sand|beige|mist|ink|rose|fog|dove"> sets the background
    (--color-page), which the footer text and some page copy also use. */
 body { --color-page: var(--color-sand); --footer: var(--color-page); background-color: var(--color-page); }
 body[data-page="beige"] { --color-page: var(--color-beige); }
 body[data-page="mist"] { --color-page: var(--color-mist); }
+body[data-page="ink"] { --color-page: #000; --footer: #fff; }
+body[data-page="rose"] { --color-page: var(--color-rose); }
+body[data-page="fog"] { --color-page: var(--color-fog); }
+body[data-page="dove"] { --color-page: var(--color-dove); }
 
 /* Smooth scrolling (Lenis) — native smooth scroll would fight it. */
 html.lenis, html.lenis body { height: auto; }

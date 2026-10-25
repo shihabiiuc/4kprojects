@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "title": "4K - Virtual Tours & VR Walkthroughs",
+    "description": "Creating pitch-winning visualisations for workplace design."
+  },
+  "hero": {
+    "title": "Virtual Tours",
+    "sources": [
+      {
+        "src": "/videos/virtual-tours-hero.webm",
+        "type": "video/webm; codecs=\"av01.0.08M.08\""
+      },
+      {
+        "src": "/videos/virtual-tours-hero.mp4",
+        "type": "video/mp4; codecs=\"avc1.640028\""
+      }
+    ],
+    "poster": "/images/virtual-tours/virtual-tours-hero-poster.webp",
+    "intro": [
+      [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+        "nisi ut aliquip ex ea commodo consequat."
+      ]
+    ]
+  },
+  "tours": [
+    {
+      "src": "https://kuula.co/share/collection/7DxkD?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1",
+      "title": "4K VR_Example 1"
+    },
+    {
+      "src": "https://kuula.co/share/collection/7DxYs?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1",
+      "title": "4K VR_Example 2"
+    },
+    {
+      "src": "https://kuula.co/share/collection/7Dxkr?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1",
+      "title": "4K VR_Example 3"
+    }
+  ],
+  "moreServices": {
+    "title": "More Services",
+    "cta": { "label": "View All Services", "href": "/#services" },
+    "items": [
+      {
+        "title": "Visualisation Portfolio",
+        "body": "A selection of workplace CGI examples and a short guide to pricing.",
+        "href": "/visualisation",
+        "image": "/images/animation/more-services-visualisation.webp",
+        "alt": "Dark office interior with a long dining table and 4K logos on the walls",
+        "w": 1440,
+        "h": 846
+      },
+      {
+        "title": "Other Services",
+        "body": "AI walkthroughs, alternate finish options, sketchy style images and more.",
+        "image": "/images/animation/more-services-other.webp",
+        "alt": "Watercolour sketch of an office lounge with a green sofa",
+        "w": 1431,
+        "h": 838
+      }
+    ]
+  },
+  "cta": {
+    "title": ["Ready to transform your vision?", "We’re here to help."],
+    "link": { "label": "GET IN TOUCH", "href": "/contact" }
+  }
+}

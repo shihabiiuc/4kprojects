@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "title": "4K - Stress-Free Architectural Visualisation",
+    "description": "Creating pitch-winning visualisations for workplace design."
+  },
+  "hero": {
+    "title": "How we work",
+    "lead": "We've reverse-engineered what makes for a truly smooth project and built our entire delivery system from the ground up. Having experienced the frustrations of outsourcing ourselves, we know exactly where things go wrong. Here's how we've tackled each challenge to create a genuinely different experience",
+    "fit": { "size": 14.52 }
+  },
+  "slides": [
+    {
+      "image": "/images/how-we-work/planted-dining.webp",
+      "alt": "Dining area with a planted ceiling ring and pink chairs"
+    },
+    {
+      "image": "/images/how-we-work/desks.webp",
+      "alt": "Desks with 4K logos on the monitors and a glass meeting room"
+    },
+    {
+      "image": "/images/how-we-work/breakout.webp",
+      "alt": "Grey breakout space with blue rugs and yellow chairs"
+    }
+  ],
+  "statsTop": ["Design led delivery", "No cap on revisions", "Next-day availability"],
+  "resources": {
+    "title": "What makes us happy",
+    "body": "Every practice works differently, and we adapt to your workflow rather than forcing you into ours. Whether you have a quick sketch on the back of an envelope or complete CAD drawings, our experienced designers can work with whatever you're able to share and fill in the gaps seamlessly.",
+    "items": [
+      { "label": "Sketches", "stars": 2 },
+      { "label": "Sketchup models", "stars": 3 },
+      { "label": "Revit Models", "stars": 4 },
+      { "label": "Furniture / finished info", "stars": 5 },
+      { "label": "Cad file", "stars": 5 }
+    ]
+  },
+  "revisions": {
+    "title": "Revisions",
+    "body": "Most studios limit you to just one or two revision rounds, creating unnecessary pressure when your client inevitably has feedback. We build in an extra 20% time buffer for design changes from the start. This means you can refine and iterate without watching the clock or worrying about surprise charges.",
+    "bars": [
+      { "title": "100% Visualisation process", "body": "Hours allocated per project" },
+      { "title": "+ 20% Revisions", "body": "Hours allocated per project" }
+    ]
+  },
+  "timeline": {
+    "title": "Timeline",
+    "body": "Most CGI studios keep their process mysterious, leaving designers guessing about timeframes. We believe in full transparency about how long each stage takes. For example, understanding that first drafts represent 80% of the total work helps designers plan better and gives valuable insight into the production process that most 3D teams simply don't share.",
+    "segments": [
+      { "value": "20%", "label": ["Geometry", "modeling"] },
+      { "value": "40%", "label": ["Model", "sourcing"] },
+      { "value": "20%", "label": ["Lighting"] },
+      { "value": "5%", "label": ["Rendering"] },
+      { "value": "15%", "label": ["Post", "production"] }
+    ]
+  },
+  "reviewing": {
+    "title": "Reviewing",
+    "body": "Our review process happens in stages to save time and avoid surprises. First, we share wireframe screenshots to confirm geometry and camera angles. Then comes low-resolution drafts where you can review textures and lighting. Only when everything looks perfect do we move to rendering the final high-resolution images.",
+    "cards": [
+      {
+        "icon": "wireframe",
+        "title": "Screenshots",
+        "body": "Wireframe views to confirm we're building the right scene from the right angle before investing time in details."
+      },
+      {
+        "icon": "image",
+        "title": "Draft resolution",
+        "body": "Your first glimpse of the final image. This is when most feedback happens and where we fine-tune everything together."
+      },
+      {
+        "icon": "gallery",
+        "title": "High resolution",
+        "body": "We produce full-resolution renders only once you’re completely satisfied with the drafts, ensuring the final images match your expectations every time."
+      }
+    ]
+  },
+  "statsBottom": ["No more email threads", "No more heavy attachments", "All comments in one place"],
+  "feedback": {
+    "title": "Feedback & Comments",
+    "body": "We use Miro, a collaborative online platform that transforms how designers leave feedback. We're all too familiar with the frustrations of hunting through email chains for comments while chasing down missing feedback. Miro keeps everything tidy, organised, and immediately accessible for the whole design team.",
+    "link": {
+      "label": "CLICK HERE",
+      "href": "https://miro.com/app/board/uXjVLaKDXtc=/?share_link_id=608745231884",
+      "after": "TO SEE AN EXAMPLE PROJECT BOARD"
+    },
+    "items": [
+      { "title": ["All Comments", "in one place"], "body": "Rather than spread across various email threads / attachments / phone calls" },
+      { "title": ["Web Based"], "body": "No downloads or apps required." },
+      { "title": ["No sign up or logins"], "body": "You’ll be able to access and edit just with the project link, free of charge" },
+      { "title": ["Easy to upload"], "body": "Attachments, links and any general design reference" },
+      { "title": ["Templates"], "body": "Use our custom designed Miro templates to intuitively navigate your project and leave feedback" },
+      { "title": ["No missed comments"], "body": "Both the project manager and 3D artist can easily scroll between drafts to ensure not a single comment is missed" },
+      { "title": ["Consistency"], "body": "The design team can cross reference to ensure not only general image quality remains consistent across the project, but that repeating finishes and features appear the same throughout" },
+      { "title": ["Real time collaboration"], "body": "Our project managers and artists can both view and interact with the project board as comments are added, meaning zero time lost in communicating or batching feedback" },
+      { "title": ["Flexibility"], "body": "Whether it takes 1 draft or 9 to reach a point you’re happy with, our boards can adapt to any eventuality" },
+      { "title": ["Cloud hosted"], "body": "Take advantage of remote server storage rather than clogging up your inbox" }
+    ]
+  }
+}

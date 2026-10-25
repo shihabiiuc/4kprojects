@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "title": "4K - Unreal Engine Real-Time Visualisation",
+    "description": "Creating pitch-winning visualisations for workplace design."
+  },
+  "hero": {
+    "title": "Unreal Engine",
+    "sources": [
+      {
+        "src": "/videos/unreal-engine-hero.webm",
+        "type": "video/webm; codecs=\"av01.0.08M.08\""
+      },
+      {
+        "src": "/videos/unreal-engine-hero.mp4",
+        "type": "video/mp4; codecs=\"avc1.640028\""
+      }
+    ],
+    "poster": "/images/unreal-engine/unreal-engine-hero-poster.webp",
+    "intro": [
+      "Unreal Engine tours take immersion to an entirely new level, giving clients the freedom to explore every corner of a space as if it were already built. There's no better way to engage, inspire, and make your design feel real long before the first wall goes up.",
+      "But don’t just take our word for it, below you’ll find an interactive meeting room we’ve created just for you. Move around the space, change finishes, and see the design evolve in real time. Try it for yourself, perhaps this could be the perfect way to elevate your next project."
+    ]
+  },
+  "tour": {
+    "name": "Unreal Engine tour",
+    "label": "Enter Unreal Engine Tour",
+    "image": {
+      "src": "/images/unreal-engine/unreal-engine-tour.webp",
+      "alt": "Meeting room with a long dark table, slatted ceiling and a 4K logo on the screen",
+      "w": 1920,
+      "h": 1074
+    },
+    "embed": {
+      "src": "https://connector.eagle3dstreaming.com/v6/eyJvd25lciI6IjRLUHJvamVjdHMiLCJhcHBOYW1lIjoiRGVtb180SyIsImNvbmZpZ05hbWUiOiIwMSJ9",
+      "title": "Unreal Engine tour of a meeting room",
+      "aspect": 1.7868525896414342
+    }
+  },
+  "moreServices": {
+    "title": "More Services",
+    "cta": { "label": "View All Services", "href": "/#services" },
+    "items": [
+      {
+        "title": "Visualisation Portfolio",
+        "body": "A selection of workplace CGI examples and a short guide to pricing.",
+        "href": "/visualisation",
+        "image": "/images/animation/more-services-visualisation.webp",
+        "alt": "Dark office interior with a long dining table and 4K logos on the walls",
+        "w": 1440,
+        "h": 846
+      },
+      {
+        "title": "Other Services",
+        "body": "AI walkthroughs, alternate finish options, sketchy style images and more.",
+        "image": "/images/animation/more-services-other.webp",
+        "alt": "Watercolour sketch of an office lounge with a green sofa",
+        "w": 1431,
+        "h": 838
+      }
+    ]
+  },
+  "cta": {
+    "title": ["Ready to transform your vision?", "We’re here to help."],
+    "link": { "label": "GET IN TOUCH", "href": "/contact" }
+  }
+}

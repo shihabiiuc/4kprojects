@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+import PageMediaHero from '../components/PageMediaHero.astro';
+import HomeReel from '../components/HomeReel.astro';
+import MoreServices from '../components/MoreServices.astro';
+import PageCta from '../components/PageCta.astro';
+import Footer from '../components/Footer.astro';
+
+import content from '../data/animation.json';
+---
+
+<Layout title={content.meta.title} description={content.meta.description} page="ink">
+  <Header logo="white" />
+  <main>
+    <!-- 1. VIDEO HERO + STICKY INTRO -->
+    <PageMediaHero
+      title={content.hero.title}
+      sources={content.hero.sources}
+      poster={content.hero.poster}
+      intro={content.hero.intro}
+    />
+
+    <!-- 2. HIGHLIGHTS REEL (scrolls over the intro) -->
+    <HomeReel
+      sources={content.reel.sources}
+      poster={content.reel.poster}
+      label={content.reel.label}
+    />
+
+    <!-- 3. MORE SERVICES -->
+    <MoreServices
+      title={content.moreServices.title}
+      cta={content.moreServices.cta}
+      items={content.moreServices.items}
+    />
+
+    <!-- 4. CALL TO ACTION -->
+    <PageCta title={content.cta.title} link={content.cta.link} />
+  </main>
+  <Footer />
+</Layout>
